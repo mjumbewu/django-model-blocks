@@ -6,7 +6,11 @@
   {% for name, value in fields %}
     <li>
       <span>{{ name|capfirst }}:</span>
+      {% if value.get_absolute_url %}
+      <span><a href="{{ value.get_absolute_url }}">{{ value }}</a></span>
+      {% else %}
       <span>{{ value }}</span>
+      {% endif %}
     </li>
   {% endfor %}
 </ul>

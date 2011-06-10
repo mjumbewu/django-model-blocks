@@ -1,0 +1,2 @@
+include LICENSE
+recursive-include model_filters *.html *.css *.png *.gif

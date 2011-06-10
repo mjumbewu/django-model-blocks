@@ -10,7 +10,7 @@ def as_detail_html(instance):
     block.  Inserts two objects into the context:
       ``instance`` - The model instance
       ``fields`` - A list of (name, value)-pairs representing the instance's
-                    fields
+                   fields
     """
     template = get_template('object_detail.html')
     fields = [(field.verbose_name, getattr(instance, field.name)) 

@@ -1,5 +1,5 @@
 """
-Test the generic filters
+Test the model filters
 """
 
 import datetime
@@ -9,7 +9,7 @@ from mock import Mock
 
 from django.db.models import Model, IntegerField, DateTimeField, CharField
 from django.template import Context, Template
-from generic_templates.templatetags import generic_filters as gf
+from model_filters.templatetags import model_filters
 
 class DetailHtmlFilterTest (TestCase):
 
@@ -37,7 +37,7 @@ class DetailHtmlFilterTest (TestCase):
         
         # Mock Django's get_template so that it doesn't load a real file;
         # instead just return a template that allows us to verify the context
-        gf.get_template = Mock(
+        model_filters.get_template = Mock(
             return_value=Template('{{ instance|safe }}:{{ fields|safe }}'))
     
     
@@ -47,16 +47,16 @@ class DetailHtmlFilterTest (TestCase):
         expected_detail = (u"Pepulator #123456:[('serial number', 123456),"
               " ('height', 25), ('width', 16), ('manufacture date', %r),"
               " ('color', 'chartreuse')]") % self.m.manufacture_date
-        detail = gf.as_detail_html(self.m)
+        detail = model_filters.as_detail_html(self.m)
         
-        gf.get_template.assert_called_with('object_detail.html')
+        model_filters.get_template.assert_called_with('object_detail.html')
         self.assertEqual(detail, expected_detail)
     
     
     def test_filter_is_registered(self):
         """Test that the filter can be used from within a template"""
         
-        template = Template(('{% load generic_filters %}'
+        template = Template(('{% load model_filters %}'
                              '{{ pepulator|as_detail_html }}'))
         context = Context({'pepulator':self.m})
         
@@ -65,5 +65,5 @@ class DetailHtmlFilterTest (TestCase):
             " ('color', 'chartreuse')]") % self.m.manufacture_date
         detail = template.render(context)
         
-        gf.get_template.assert_called_with('object_detail.html')
+        model_filters.get_template.assert_called_with('object_detail.html')
         self.assertEqual(detail, expected_detail)

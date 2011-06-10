@@ -1,6 +1,9 @@
-from django.template import Context, Template
+from django.template import Context, Template, Library
 from django.template.loader import get_template
 
+register = Library()
+
+@register.filter
 def as_detail_html(instance):
     """
     Template filter that returns the given instance as a template-formatted

@@ -17,3 +17,16 @@ def as_detail_html(instance):
               for field in instance._meta.fields]
     context = Context({'instance':instance, 'fields':fields})
     return template.render(context)
+
+
+@register.filter
+def as_list_html(queryset):
+    """
+    Template filter that returns the given instance list as a template-formatted
+    block.  Inserts into the context:
+        ``instance_list`` - The list of instances
+    """
+    template = get_template('object_list.html')
+    context = Context({'instance_list':queryset})
+    return template.render(context)
+    

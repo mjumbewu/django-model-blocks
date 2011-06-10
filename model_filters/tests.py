@@ -67,3 +67,73 @@ class DetailHtmlFilterTest (TestCase):
         
         model_filters.get_template.assert_called_with('object_detail.html')
         self.assertEqual(detail, expected_detail)
+
+
+class ListHtmlFilterTest (TestCase):
+
+    def setUp(self):
+        # Create a sample model
+        class PepulatorModel (Model):
+            serial_number = IntegerField(primary_key=True)
+            height = IntegerField()
+            width = IntegerField()
+            manufacture_date = DateTimeField()
+            color = CharField(max_length=32)
+        
+            def __unicode__(self):
+                return u'Pepulator #%s' % self.serial_number
+        
+        # Create a model instance
+        now = datetime.datetime.now()
+        self.l = [
+            PepulatorModel(
+                serial_number = 123456,
+                height = 25,
+                width = 16,
+                manufacture_date = now,
+                color = 'chartreuse',
+            ),
+            PepulatorModel(
+                serial_number = 987654,
+                height = 25,
+                width = 16,
+                manufacture_date = now,
+                color = 'grey',
+            ),
+            PepulatorModel(
+                serial_number = 246810,
+                height = 25,
+                width = 16,
+                manufacture_date = now,
+                color = 'sunset',
+            ),
+        ]
+        
+        # Mock Django's get_template so that it doesn't load a real file;
+        # instead just return a template that allows us to verify the context
+        model_filters.get_template = Mock(
+            return_value=Template('PepulatorModel:{{ instance_list|safe }}'))
+    
+    
+    def test_list_format(self):
+        """Tests that a given model is formatted as expected."""
+        
+        expected_rendering = (u"PepulatorModel:%r" % self.l)
+        rendering = model_filters.as_list_html(self.l)
+        
+        model_filters.get_template.assert_called_with('object_list.html')
+        self.assertEqual(rendering, expected_rendering)
+    
+    
+    def test_filter_is_registered(self):
+        """Test that the filter can be used from within a template"""
+        
+        template = Template(('{% load model_filters %}'
+                             '{{ pepulators|as_list_html }}'))
+        context = Context({'pepulators':self.l})
+        
+        expected_rendering = (u"PepulatorModel:%r" % self.l)
+        rendering = template.render(context)
+        
+        model_filters.get_template.assert_called_with('object_list.html')
+        self.assertEqual(rendering, expected_rendering)

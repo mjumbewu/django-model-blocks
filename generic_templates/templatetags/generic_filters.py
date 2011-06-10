@@ -1,7 +1,5 @@
 from django.template import Context, Template
-
-def _get_detail_template():
-    return Template('Hello')
+from django.template.loader import get_template
 
 def as_detail_html(instance):
     """
@@ -11,7 +9,7 @@ def as_detail_html(instance):
       ``fields`` - A list of (name, value)-pairs representing the instance's
                     fields
     """
-    template = _get_detail_template()
+    template = get_template('object_detail.html')
     fields = [(field.verbose_name, getattr(instance, field.name)) 
               for field in instance._meta.fields]
     context = Context({'instance':instance, 'fields':fields})

@@ -37,9 +37,10 @@ class DetailHtmlFilterTest (TestCase):
             color = 'chartreuse',
         )
         
-        gf._get_detail_template = Mock(return_value=Template('{{ instance|safe }}:{{ fields|safe }}'))
+        gf.get_template = Mock(return_value=Template('{{ instance|safe }}:{{ fields|safe }}'))
         
         expected_detail = u"Pepulator #123456:[('serial number', 123456), ('height', 25), ('width', 16), ('manufacture date', %r), ('color', 'chartreuse')]" % m.manufacture_date
         detail = gf.as_detail_html(m)
         
+        gf.get_template.assert_called_with('object_detail.html')
         self.assertEqual(detail, expected_detail)

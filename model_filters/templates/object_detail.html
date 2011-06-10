@@ -1,0 +1,12 @@
+<header>
+  <h1>{{ instance }}</h1>
+</header>
+
+<ul>
+  {% for name, value in fields %}
+    <li>
+      <span>{{ name|capfirst }}:</span>
+      <span>{{ value }}</span>
+    </li>
+  {% endfor %}
+</ul>

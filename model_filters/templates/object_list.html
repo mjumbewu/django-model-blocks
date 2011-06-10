@@ -1,0 +1,5 @@
+<ul>
+  {% for instance in instance_list %}
+    <li><a href="{{ instance.get_absolute_url }}">{{ instance }}</a></li>
+  {% endfor %}
+</ul>

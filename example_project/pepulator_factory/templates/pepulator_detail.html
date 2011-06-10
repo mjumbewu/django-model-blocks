@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load model_filters %}
+
+{% block title %}{{ pepulator }}{% endblock %}
+
+{% block content %}
+  {{ pepulator|as_detail_html }}
+{% endblock %}
+

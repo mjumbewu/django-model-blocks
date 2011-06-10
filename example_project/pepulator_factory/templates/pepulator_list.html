@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load model_filters %}
+
+{% block title %}Pepulators{% endblock %}
+
+{% block content %}
+  <heading>
+    <h1>Pepulators</h1>
+  </heading>
+  
+  {{ pepulators|as_list_html }}
+{% endblock %}
+

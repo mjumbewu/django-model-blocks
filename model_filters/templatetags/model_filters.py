@@ -5,7 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 register = Library()
 
 @register.filter
-def as_detail_html(instance):
+def as_detail_html(instance, title=None):
     """
     Template filter that returns the given instance as a template-formatted
     block.  Inserts two objects into the context:
@@ -22,12 +22,12 @@ def as_detail_html(instance):
               ) 
               for field in instance._meta.fields
               if getattr(instance, field.name) is not None]
-    context = Context({'model':content_type.model, 'instance':instance, 'fields':fields})
+    context = Context({'model':content_type.model, 'instance':instance, 'fields':fields, 'title':title})
     return template.render(context)
 
 
 @register.filter
-def as_list_html(queryset):
+def as_list_html(queryset, list_title=None):
     """
     Template filter that returns the given instance list as a template-formatted
     block.  Inserts into the context:
@@ -41,6 +41,6 @@ def as_list_html(queryset):
     else:
         model = 'object'
     
-    context = Context({'model':model, 'instance_list':queryset})
+    context = Context({'model':model, 'instance_list':queryset, 'title':list_title})
     return template.render(context)
     

@@ -1,6 +1,6 @@
 <section class="instance_detail_wrapper {{ model }}_detail_wrapper">
   <header class="instance_header {{ model }}_header">
-    <h1>{{ instance }}</h1>
+    <h1>{{ title|default_if_none:instance }}</h1>
   </header>
 
   <div class="instance_detail {{ model }}_detail">

@@ -1,6 +1,6 @@
 <section class="instance_list_wrapper {{ model }}_list_wrapper">
   <header class="instance_list_header {{ model }}_list_header">
-    <h1>{{ model|capfirst }} List</h1>
+    <h1>{{ title|default_if_none:model|capfirst }}{% if not title %} List{% endif %}</h1>
   </header>
 
   <ul class="instance_list {{ model }}_list">

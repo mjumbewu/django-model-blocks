@@ -5,7 +5,7 @@
 
   <ul class="instance_list {{ model }}_list">
     {% for instance in instance_list %}
-      <li class="instance_list_item {{ model }}_list_item">{% spaceless %}
+      <li class="instance_list_item {{ model }}_list_item {{ model }}_{{ instance.pk }}_list_item">{% spaceless %}
         
         {% if instance.get_absolute_url %}
           <a href="{{ instance.get_absolute_url }}">{{ instance }}</a>

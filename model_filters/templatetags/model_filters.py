@@ -35,11 +35,11 @@ def as_list_html(queryset, list_title=None):
     """
     template = get_template('object_list.html')
     
-    if queryset.model:
+    if hasattr(queryset, 'model') and queryset.model:
         content_type = ContentType.objects.get_for_model(queryset.model)
         model = content_type.model
     else:
-        model = 'object'
+        model = None
     
     context = Context({'model':model, 'instance_list':queryset, 'title':list_title})
     return template.render(context)

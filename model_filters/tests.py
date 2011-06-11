@@ -101,7 +101,8 @@ class ListHtmlFilterTest (TestCase):
         """Tests that a given model is formatted as expected."""
         pepulator_list = Pepulator.objects.filter(serial_number__gt=2000)
         
-        expected_rendering = (u"Pepulators:[<Pepulator: Pepulator #2345>, <Pepulator: Pepulator #2346>]")
+        expected_rendering = (u"Pepulators:[<Pepulator: Pepulator #2345>, "
+                               "<Pepulator: Pepulator #2346>]")
         rendering = model_filters.as_list_html(pepulator_list)
         
         model_filters.get_template.assert_called_with('object_list.html')
@@ -116,7 +117,26 @@ class ListHtmlFilterTest (TestCase):
         pepulator_list = Pepulator.objects.filter(serial_number__gt=2000)
         context = Context({'pepulators':pepulator_list})
         
-        expected_rendering = (u"Pepulators:[<Pepulator: Pepulator #2345>, <Pepulator: Pepulator #2346>]")
+        expected_rendering = (u"Pepulators:[<Pepulator: Pepulator #2345>, "
+                               "<Pepulator: Pepulator #2346>]")
+        rendering = template.render(context)
+        
+        model_filters.get_template.assert_called_with('object_list.html')
+        self.assertEqual(rendering, expected_rendering)
+
+    
+    def test_non_query_set_results_in_no_model(self):
+        """Test that when a non queryset is used, the model is None"""
+        # Why? Because we try to read the model off of the queryset. If we just
+        # have a list of objects, then we don't know the model.
+        
+        template = Template(('{% load model_filters %}'
+                             '{{ pepulators|as_list_html }}'))
+        pepulator_list = [p for p in Pepulator.objects.filter(serial_number__gt=2000)]
+        context = Context({'pepulators':pepulator_list})
+        
+        expected_rendering = (u"Nones:[<Pepulator: Pepulator #2345>, "
+                               "<Pepulator: Pepulator #2346>]")
         rendering = template.render(context)
         
         model_filters.get_template.assert_called_with('object_list.html')
@@ -130,7 +150,8 @@ class ListHtmlFilterTest (TestCase):
         pepulator_list = Pepulator.objects.filter(serial_number__gt=2000)
         context = Context({'pepulators':pepulator_list})
         
-        expected_rendering = (u"Some Pepulators:[<Pepulator: Pepulator #2345>, <Pepulator: Pepulator #2346>]")
+        expected_rendering = (u"Some Pepulators:[<Pepulator: Pepulator #2345>, "
+                               "<Pepulator: Pepulator #2346>]")
         rendering = template.render(context)
         
         model_filters.get_template.assert_called_with('object_list.html')

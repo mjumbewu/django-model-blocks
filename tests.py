@@ -9,6 +9,7 @@ os.environ["DJANGO_SETTINGS_MODULE"] = 'example_project.settings'
 from example_project import settings
 
 settings.INSTALLED_APPS = (
+    'django.contrib.contenttypes',
     'example_project.pepulator_factory',
     'model_filters',
 )

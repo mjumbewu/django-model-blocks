@@ -17,6 +17,41 @@ And drop the filter anywhere you have a model instance (e.g., DetailViews):
 
     {{ object|as_detail_html }}
 
+Installing
+----------
+
+    $ pip install django-model-filters
+
+Settings
+--------
+
+Modify your ``INSTALLED_APPS`` setting to include:
+
+    ...
+    model_filters,
+    ...
+
+Usage
+-----
+
+Near the top of any template you want to use model filters, or in a base 
+template, include the following line:
+
+    {% load model_filters %}
+
+Then, where you want to drop a generic model template, use:
+
+    {{ object|as_detail_html }}
+
+    {{ object_list|as_list_html }}
+
+Development
+-----------
+
+Download the code and then:
+
+    $ pip install -r dev-requirements.txt
+    
 Running Tests
 -------------
 

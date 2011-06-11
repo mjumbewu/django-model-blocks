@@ -4,9 +4,9 @@
   </header>
 
   <div class="model_instance_detail {{ model }}_detail">
-    {% for name, value in fields %}
+    {% for name, label, value in fields %}
       <div class="model_instance_field {{ model }}_{{ name }}">
-        <span class="model_instance_field_label {{ model }}_{{ name }}_label">{{ name|capfirst }}:</span>
+        <span class="model_instance_field_label {{ model }}_{{ name }}_label">{{ label|capfirst }}</span>
         <span class="model_instance_field_value {{ model }}_{{ name }}_value">{% spaceless %}
         
           {% if value.get_absolute_url %}

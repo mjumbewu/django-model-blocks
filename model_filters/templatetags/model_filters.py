@@ -10,13 +10,14 @@ def as_detail_html(instance):
     Template filter that returns the given instance as a template-formatted
     block.  Inserts two objects into the context:
       ``instance`` - The model instance
-      ``fields`` - A list of (name, value, class) tuples representing the 
+      ``fields`` - A list of (name, label, value) tuples representing the 
                    instance's fields
     """
     template = get_template('object_detail.html')
     content_type = ContentType.objects.get_for_model(instance)
     
-    fields = [(field.verbose_name, 
+    fields = [(field.name, 
+               field.verbose_name,
                getattr(instance, field.name),
               ) 
               for field in instance._meta.fields

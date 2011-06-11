@@ -28,12 +28,12 @@ class DetailHtmlFilterTest (TestCase):
         pepulator = Pepulator.objects.get(serial_number=1235)
         
         expected_detail = (u"Pepulator #1235:pepulator,["
-              "('serial number', 1235), "
-              "('height', 12), "
-              "('width', 15), "
-              "('manufacture date', datetime.datetime(2011, 6, 10, 11, 12, 33)), "
-              "('color', u'red'), "
-              "('distributed by', <Distributor: Walmart>)"
+              "('serial_number', 'serial number', 1235), "
+              "('height', 'height', 12), "
+              "('width', 'width', 15), "
+              "('manufacture_date', 'manufacture date', datetime.datetime(2011, 6, 10, 11, 12, 33)), "
+              "('color', 'color', u'red'), "
+              "('distributed_by', 'distributed by', <Distributor: Walmart>)"
               "]")
         detail = model_filters.as_detail_html(pepulator)
         
@@ -51,12 +51,12 @@ class DetailHtmlFilterTest (TestCase):
         context = Context({'pepulator':pepulator})
         
         expected_detail = (u"Pepulator #1235:pepulator,["
-              "('serial number', 1235), "
-              "('height', 12), "
-              "('width', 15), "
-              "('manufacture date', datetime.datetime(2011, 6, 10, 11, 12, 33)), "
-              "('color', u'red'), "
-              "('distributed by', <Distributor: Walmart>)"
+              "('serial_number', 'serial number', 1235), "
+              "('height', 'height', 12), "
+              "('width', 'width', 15), "
+              "('manufacture_date', 'manufacture date', datetime.datetime(2011, 6, 10, 11, 12, 33)), "
+              "('color', 'color', u'red'), "
+              "('distributed_by', 'distributed by', <Distributor: Walmart>)"
               "]")
         detail = template.render(context)
         

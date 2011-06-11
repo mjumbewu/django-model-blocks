@@ -1,13 +1,13 @@
-<section class="model_instance_detail_wrapper {{ model }}_detail_wrapper">
-  <header class="model_instance_header {{ model }}_header">
+<section class="instance_detail_wrapper {{ model }}_detail_wrapper">
+  <header class="instance_header {{ model }}_header">
     <h1>{{ instance }}</h1>
   </header>
 
-  <div class="model_instance_detail {{ model }}_detail">
+  <div class="instance_detail {{ model }}_detail">
     {% for name, label, value in fields %}
-      <div class="model_instance_field {{ model }}_{{ name }}">
-        <span class="model_instance_field_label {{ model }}_{{ name }}_label">{{ label|capfirst }}</span>
-        <span class="model_instance_field_value {{ model }}_{{ name }}_value">{% spaceless %}
+      <div class="instance_field {{ model }}_{{ name }}">
+        <span class="instance_field_label {{ model }}_{{ name }}_label">{{ label|capfirst }}</span>
+        <span class="instance_field_value {{ model }}_{{ name }}_value">{% spaceless %}
         
           {% if value.get_absolute_url %}
             <a href="{{ value.get_absolute_url }}">{{ value }}</a>

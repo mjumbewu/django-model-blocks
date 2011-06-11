@@ -9,23 +9,24 @@ The ``model_filters`` app allows you to have generic Django templates.  It fills
 * Can be placed as blocks on to your existing templates
 * Integrate well with the rest of your project
 
-Add this to the top of any template:
+Add this to the top of any template::
 
     {% load model_filters %}
 
-And drop the filter anywhere you have a model instance (e.g., DetailViews):
+And drop the filter anywhere you have a model instance (e.g., DetailViews)::
 
     {{ object|as_detail_html }}
 
 Installing
 ----------
 
+::
     $ pip install django-model-filters
 
 Settings
 --------
 
-Modify your ``INSTALLED_APPS`` setting to include:
+Modify your ``INSTALLED_APPS`` setting to include::
 
     ...
     model_filters,
@@ -35,26 +36,29 @@ Usage
 -----
 
 Near the top of any template you want to use model filters, or in a base 
-template, include the following line:
+template, include the following line::
 
     {% load model_filters %}
 
-Then, where you want to drop a generic model template, use:
+Then, where you want to drop a generic model template, use::
 
     {{ object|as_detail_html }}
+
+Or::
 
     {{ object_list|as_list_html }}
 
 Development
 -----------
 
-Download the code and then:
+Download the code and then::
 
     $ pip install -r dev-requirements.txt
     
 Running Tests
 -------------
 
+::
     $ python tests.py --with-coverage --cover-package=model_filters
 
 Run it before and after you make any changes.  Try to not let that number drop.

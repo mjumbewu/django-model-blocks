@@ -16,3 +16,10 @@ Add this to the top of any template:
 And drop the filter anywhere you have a model instance (e.g., DetailViews):
 
     {{ object|as_detail_html }}
+
+Running Tests
+-------------
+
+    $ python tests.py --with-coverage --cover-package=model_filters
+
+Run it before and after you make any changes.  Try to not let that number drop.

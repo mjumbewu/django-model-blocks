@@ -10,7 +10,7 @@ from mock import Mock
 from django.db.models import Model, IntegerField, DateTimeField, CharField
 from django.template import Context, Template
 
-from example_project.pepulator_factory.models import PepulatorModel
+from example_project.pepulator_factory.models import Pepulator
 from model_filters.templatetags import model_filters
 
 class DetailHtmlFilterTest (TestCase):
@@ -18,7 +18,7 @@ class DetailHtmlFilterTest (TestCase):
     def setUp(self):
         # Create a model instance
         now = datetime.datetime.now()
-        self.m = PepulatorModel(
+        self.m = Pepulator(
             serial_number = 123456,
             height = 25,
             width = 16,
@@ -63,35 +63,24 @@ class DetailHtmlFilterTest (TestCase):
 class ListHtmlFilterTest (TestCase):
 
     def setUp(self):
-        # Create a sample model
-        class PepulatorModel (Model):
-            serial_number = IntegerField(primary_key=True)
-            height = IntegerField()
-            width = IntegerField()
-            manufacture_date = DateTimeField()
-            color = CharField(max_length=32)
-        
-            def __unicode__(self):
-                return u'Pepulator #%s' % self.serial_number
-        
         # Create a model instance
         now = datetime.datetime.now()
         self.l = [
-            PepulatorModel(
+            Pepulator(
                 serial_number = 123456,
                 height = 25,
                 width = 16,
                 manufacture_date = now,
                 color = 'chartreuse',
             ),
-            PepulatorModel(
+            Pepulator(
                 serial_number = 987654,
                 height = 25,
                 width = 16,
                 manufacture_date = now,
                 color = 'grey',
             ),
-            PepulatorModel(
+            Pepulator(
                 serial_number = 246810,
                 height = 25,
                 width = 16,
@@ -103,13 +92,13 @@ class ListHtmlFilterTest (TestCase):
         # Mock Django's get_template so that it doesn't load a real file;
         # instead just return a template that allows us to verify the context
         model_filters.get_template = Mock(
-            return_value=Template('PepulatorModel:{{ instance_list|safe }}'))
+            return_value=Template('Pepulators:{{ instance_list|safe }}'))
     
     
     def test_list_format(self):
         """Tests that a given model is formatted as expected."""
         
-        expected_rendering = (u"PepulatorModel:%r" % self.l)
+        expected_rendering = (u"Pepulators:%r" % self.l)
         rendering = model_filters.as_list_html(self.l)
         
         model_filters.get_template.assert_called_with('object_list.html')
@@ -123,7 +112,7 @@ class ListHtmlFilterTest (TestCase):
                              '{{ pepulators|as_list_html }}'))
         context = Context({'pepulators':self.l})
         
-        expected_rendering = (u"PepulatorModel:%r" % self.l)
+        expected_rendering = (u"Pepulators:%r" % self.l)
         rendering = template.render(context)
         
         model_filters.get_template.assert_called_with('object_list.html')

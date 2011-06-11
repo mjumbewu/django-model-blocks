@@ -1,5 +1,5 @@
 from django.contrib import admin
-from pepulator_factory.models import PepulatorModel, DistributorModel
+from pepulator_factory.models import Pepulator, Distributor
 
-admin.site.register(PepulatorModel)
-admin.site.register(DistributorModel)
+admin.site.register(Pepulator)
+admin.site.register(Distributor)

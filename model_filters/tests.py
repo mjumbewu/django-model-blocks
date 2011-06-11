@@ -9,22 +9,13 @@ from mock import Mock
 
 from django.db.models import Model, IntegerField, DateTimeField, CharField
 from django.template import Context, Template
+
+from example_project.pepulator_factory.models import PepulatorModel
 from model_filters.templatetags import model_filters
 
 class DetailHtmlFilterTest (TestCase):
 
     def setUp(self):
-        # Create a sample model
-        class PepulatorModel (Model):
-            serial_number = IntegerField(primary_key=True)
-            height = IntegerField()
-            width = IntegerField()
-            manufacture_date = DateTimeField()
-            color = CharField(max_length=32)
-        
-            def __unicode__(self):
-                return u'Pepulator #%s' % self.serial_number
-        
         # Create a model instance
         now = datetime.datetime.now()
         self.m = PepulatorModel(

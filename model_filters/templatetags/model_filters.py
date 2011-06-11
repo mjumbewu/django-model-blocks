@@ -14,7 +14,8 @@ def as_detail_html(instance):
     """
     template = get_template('object_detail.html')
     fields = [(field.verbose_name, getattr(instance, field.name)) 
-              for field in instance._meta.fields]
+              for field in instance._meta.fields
+              if getattr(instance, field.name) is not None]
     context = Context({'instance':instance, 'fields':fields})
     return template.render(context)
 

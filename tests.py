@@ -9,12 +9,7 @@ os.environ["DJANGO_SETTINGS_MODULE"] = 'example_project.settings'
 from example_project import settings
 
 settings.INSTALLED_APPS = (
-#    'django.contrib.auth',
-#    'django.contrib.sessions',
-#    'django.contrib.contenttypes',
-#    'django.contrib.admin',
-#    'django.contrib.sites',
-#    'demo_project.profiles',
+    'example_project.pepulator_factory',
     'model_filters',
 )
 

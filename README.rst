@@ -2,9 +2,10 @@
 Django Model Filters
 ====================
 
-The ``model_filters`` app allows you to have generic Django templates. It fills
-a gap left by ``admin`` and ``databrowse`` by providing filters that allow your
-to painlessly create templates with the following properties:
+The ``model_filters`` app provides you with automatically generated, stylable
+generic Django templates. It fills a gap left by ``admin`` and ``databrowse`` by
+providing filters that allow your to painlessly create templates with the
+following properties:
 
 * Automatically generated read-only views
 * Can conform to whatever URL structure you want

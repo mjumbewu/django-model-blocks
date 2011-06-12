@@ -4,6 +4,15 @@
 {% block title %}Content{% endblock %}
 
 {% block content %}
-  {{ content|as_list_html }}
+<section class="instance_list_wrapper contenttype_list_wrapper"> 
+  <header class="instance_list_header contenttype_list_header"> 
+    <h1>Index</h1> 
+  </header> 
+ 
+  <ul class="instance_list contenttype_list"> 
+      <li class="instance_list_item contenttype_list_item contenttype_12_list_item"><a href="/distributors/">Distrbutors</a></li> 
+      <li class="instance_list_item contenttype_list_item contenttype_11_list_item"><a href="/pepulators/">Pepulators</a></li>     
+  </ul> 
+</section>
 {% endblock %}
 

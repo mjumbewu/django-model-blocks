@@ -11,7 +11,7 @@ except IOError, err:
     sys.exit(1)
 
 setup(name='django-model-filters',
-      version=0.1,
+      version=0.5,
       description='Simple filters for generic object template blocks',
       long_description=long_description,
       zip_safe=False,

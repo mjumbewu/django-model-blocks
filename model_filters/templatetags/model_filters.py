@@ -1,6 +1,5 @@
 from django.template import Context, Template, Library
 from django.template.loader import get_template
-from django.contrib.contenttypes.models import ContentType
 
 register = Library()
 
@@ -14,7 +13,6 @@ def as_detail_html(instance, title=None):
                    instance's fields
     """
     template = get_template('object_detail.html')
-    content_type = ContentType.objects.get_for_model(instance)
     
     fields = [(field.name, 
                field.verbose_name,
@@ -22,7 +20,7 @@ def as_detail_html(instance, title=None):
               ) 
               for field in instance._meta.fields
               if getattr(instance, field.name) is not None]
-    context = Context({'model':content_type.model, 'instance':instance, 'fields':fields, 'title':title})
+    context = Context({'model':instance._meta.module_name, 'instance':instance, 'fields':fields, 'title':title})
     return template.render(context)
 
 
@@ -36,8 +34,7 @@ def as_list_html(queryset, list_title=None):
     template = get_template('object_list.html')
     
     if hasattr(queryset, 'model') and queryset.model:
-        content_type = ContentType.objects.get_for_model(queryset.model)
-        model = content_type.model
+        model = queryset.model._meta.module_name
     else:
         model = None
     

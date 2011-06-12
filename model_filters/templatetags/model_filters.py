@@ -26,16 +26,10 @@ def as_detail_html(instance, title=None):
         
         if value is not None:
             fields.append((
-                name,
-                label,
-                value,
-                is_list,
-                is_direct,
-                model,
+                name, label, value, is_list, is_direct, model,
             ))
     
     for rel_obj, model in instance._meta.get_all_related_objects_with_model():
-#        field, model, direct, m2m = instance._meta.get_field_by_name(name)
         name = rel_obj.get_accessor_name()
         label = name
         value = getattr(instance, name)
@@ -44,12 +38,7 @@ def as_detail_html(instance, title=None):
         
         if value is not None:
             fields.append((
-                name,
-                label,
-                value,
-                is_list,
-                is_direct,
-                model,
+                name, label, value, is_list, is_direct, model,
             ))
     context = Context({'model':instance._meta.module_name, 'instance':instance, 'fields':fields, 'title':title})
     return template.render(context)

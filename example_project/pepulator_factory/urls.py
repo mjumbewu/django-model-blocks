@@ -1,9 +1,15 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.views.generic import ListView, DetailView
 
+from django.contrib.contenttypes.models import ContentType
 import pepulator_factory.models
 
 urlpatterns = patterns('pepulator_factory',
+    url(r'^$', ListView.as_view(
+        queryset=ContentType.objects.filter(model__in=('pepulator','distributor')),
+        template_name='content_list.html',
+        context_object_name='content'),
+        name='content_list_view'),
     url(r'^pepulators/$', ListView.as_view(
         model=pepulator_factory.models.Pepulator,
         template_name='pepulator_list.html',

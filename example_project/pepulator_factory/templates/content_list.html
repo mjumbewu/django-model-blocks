@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load model_filters %}
+
+{% block title %}Content{% endblock %}
+
+{% block content %}
+  {{ content|as_list_html }}
+{% endblock %}
+

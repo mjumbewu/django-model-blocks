@@ -39,6 +39,10 @@ Modify your ``INSTALLED_APPS`` setting to include::
     model_filters,
     ...
 
+If you plan on overriding any of ``model_filter``'s default templates, remember
+that ``app_directories.Loader`` searches apps in the order they are specified
+in ``INSTALLED_APPS``.
+
 Usage
 ~~~~~
 

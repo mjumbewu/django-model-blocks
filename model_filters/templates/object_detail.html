@@ -8,7 +8,7 @@
   <div class="instance_detail {{ model }}_detail">
     {% for name, label, value, is_list in fields %}
       <div class="instance_field {{ model }}_{{ name }}">
-        {% if not is_list %}
+        {% if not is_list and value is not None %}
           <span class="instance_field_label {{ model }}_{{ name }}_label">{{ label|capfirst }}</span>
           <span class="instance_field_value {{ model }}_{{ name }}_value">{% spaceless %}
           
@@ -19,7 +19,9 @@
             {% endif %}
             
           {% endspaceless %}</span>
-        {% else %}
+        {% endif %}
+        
+        {% if is_list and value.all|length %}
           {{ value.all|as_list_html:label|capfirst }}
         {% endif %}
       </div>

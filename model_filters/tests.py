@@ -10,7 +10,7 @@ from mock import Mock
 from django.db.models import Model, IntegerField, DateTimeField, CharField
 from django.template import Context, Template
 
-from example_project.pepulator_factory.models import Pepulator
+from example_project.pepulator_factory.models import Pepulator, Distributor
 from model_filters.templatetags import model_filters
 
 class DetailHtmlFilterTest (TestCase):
@@ -20,21 +20,21 @@ class DetailHtmlFilterTest (TestCase):
         # Mock Django's get_template so that it doesn't load a real file;
         # instead just return a template that allows us to verify the context
         model_filters.get_template = Mock(
-            return_value=Template('{{ title|default_if_none:instance|safe }}:{{ model|safe }},{{ fields|safe }}'))
+            return_value=Template('{{ title|default_if_none:instance|safe }}:{{ model|safe }},{% for name, label, value, is_list in fields %}{{ name|safe }},{{ label|safe }},{% if not is_list %}{{ value|safe }}{% else %}[{% for item in value.all %}{{ item|safe }}{% endfor %}]{% endif %},{% endfor %}'))
     
     
     def test_model_format(self):
         """Tests that a given model is formatted as expected."""
         pepulator = Pepulator.objects.get(serial_number=1235)
         
-        expected_detail = (u"Pepulator #1235:pepulator,["
-              "('serial_number', 'serial number', 1235), "
-              "('height', 'height', 12), "
-              "('width', 'width', 15), "
-              "('manufacture_date', 'manufacture date', datetime.datetime(2011, 6, 10, 11, 12, 33)), "
-              "('color', 'color', u'red'), "
-              "('distributed_by', 'distributed by', <Distributor: Walmart>)"
-              "]")
+        expected_detail = (u"Pepulator #1235:pepulator,"
+            "serial_number,serial number,1235,"
+            "height,height,12,"
+            "width,width,15,"
+            "manufacture_date,manufacture date,2011-06-10 11:12:33,"
+            "color,color,red,"
+            "distributed_by,distributed by,Walmart,"
+        )
         detail = model_filters.as_detail_html(pepulator)
         
         model_filters.get_template.assert_called_with('object_detail.html')
@@ -50,14 +50,14 @@ class DetailHtmlFilterTest (TestCase):
         pepulator = Pepulator.objects.get(serial_number=1235)
         context = Context({'pepulator':pepulator})
         
-        expected_detail = (u"Pepulator #1235:pepulator,["
-              "('serial_number', 'serial number', 1235), "
-              "('height', 'height', 12), "
-              "('width', 'width', 15), "
-              "('manufacture_date', 'manufacture date', datetime.datetime(2011, 6, 10, 11, 12, 33)), "
-              "('color', 'color', u'red'), "
-              "('distributed_by', 'distributed by', <Distributor: Walmart>)"
-              "]")
+        expected_detail = (u"Pepulator #1235:pepulator,"
+            "serial_number,serial number,1235,"
+            "height,height,12,"
+            "width,width,15,"
+            "manufacture_date,manufacture date,2011-06-10 11:12:33,"
+            "color,color,red,"
+            "distributed_by,distributed by,Walmart,"
+        )
         detail = template.render(context)
         
         model_filters.get_template.assert_called_with('object_detail.html')
@@ -73,20 +73,35 @@ class DetailHtmlFilterTest (TestCase):
         pepulator = Pepulator.objects.get(serial_number=1235)
         context = Context({'pepulator':pepulator})
         
-        expected_detail = (u"My Pepulator:pepulator,["
-              "('serial_number', 'serial number', 1235), "
-              "('height', 'height', 12), "
-              "('width', 'width', 15), "
-              "('manufacture_date', 'manufacture date', datetime.datetime(2011, 6, 10, 11, 12, 33)), "
-              "('color', 'color', u'red'), "
-              "('distributed_by', 'distributed by', <Distributor: Walmart>)"
-              "]")
+        expected_detail = (u"My Pepulator:pepulator,"
+            "serial_number,serial number,1235,"
+            "height,height,12,"
+            "width,width,15,"
+            "manufacture_date,manufacture date,2011-06-10 11:12:33,"
+            "color,color,red,"
+            "distributed_by,distributed by,Walmart,"
+        )
         detail = template.render(context)
         
         model_filters.get_template.assert_called_with('object_detail.html')
         self.assertEqual(detail, expected_detail)
 
 
+    def test_related_fields(self):
+        """Tests that related fields not defined on the model are included."""
+        pepulator = Distributor.objects.get(name="Mom & Pop")
+        
+        expected_detail = (u"Mom & Pop:distributor,"
+            "name,name,Mom & Pop,"
+            "capacity,capacity,175,"
+            "stock,stock,[Pepulator #1238],"
+        )
+        detail = model_filters.as_detail_html(pepulator)
+        
+        model_filters.get_template.assert_called_with('object_detail.html')
+        self.assertEqual(detail, expected_detail)
+    
+    
 class ListHtmlFilterTest (TestCase):
     fixtures = ['pepulator_factory_data.json']
 

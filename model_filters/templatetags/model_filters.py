@@ -1,3 +1,4 @@
+from django.db.models.manager import Manager
 from django.template import Context, Template, Library
 from django.template.loader import get_template
 
@@ -14,12 +15,42 @@ def as_detail_html(instance, title=None):
     """
     template = get_template('object_detail.html')
     
-    fields = [(field.name, 
-               field.verbose_name,
-               getattr(instance, field.name),
-              ) 
-              for field in instance._meta.fields
-              if getattr(instance, field.name) is not None]
+    fields = []
+    for field in instance._meta.fields:
+        name = field.name
+        label = field.verbose_name
+        value = getattr(instance, field.name)
+        is_list = False
+        is_direct = True
+        model = instance._meta.module_name
+        
+        if value is not None:
+            fields.append((
+                name,
+                label,
+                value,
+                is_list,
+                is_direct,
+                model,
+            ))
+    
+    for rel_obj, model in instance._meta.get_all_related_objects_with_model():
+#        field, model, direct, m2m = instance._meta.get_field_by_name(name)
+        name = rel_obj.get_accessor_name()
+        label = name
+        value = getattr(instance, name)
+        is_list = isinstance(value, (list, tuple, Manager))
+        is_direct = False
+        
+        if value is not None:
+            fields.append((
+                name,
+                label,
+                value,
+                is_list,
+                is_direct,
+                model,
+            ))
     context = Context({'model':instance._meta.module_name, 'instance':instance, 'fields':fields, 'title':title})
     return template.render(context)
 

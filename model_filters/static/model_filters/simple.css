@@ -1,0 +1,26 @@
+.instance_header > h1,
+.instance_list_header > h1 {
+  font-size: 1em;
+  font-weight: bold;
+  
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid black;
+  margin-bottom: 1em;
+}
+
+.instance_field .instance_header > h1,
+.instance_field .instance_list_header > h1 {
+  font-weight: normal;
+  
+  margin: 0px;
+  padding: 0px;
+  border: none;
+}
+
+.instance_list {
+  margin: 0px auto;
+}
+
+.instance_field_label:after {
+  content: ': ';
+}

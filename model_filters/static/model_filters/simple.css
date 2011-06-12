@@ -8,15 +8,6 @@
   margin-bottom: 1em;
 }
 
-.instance_field .instance_header > h1,
-.instance_field .instance_list_header > h1 {
-  font-weight: normal;
-  
-  margin: 0px;
-  padding: 0px;
-  border: none;
-}
-
 .instance_list {
   margin: 0px auto;
 }
@@ -24,3 +15,26 @@
 .instance_field_label:after {
   content: ': ';
 }
+
+/* ==== INSTANCE DETAILS IN A LIST ==== */
+.instance_list_item > * > .instance_header > h1,
+.instance_list_item > * > .instance_list_header > h1 {
+  font-weight: normal;
+  text-decoration: underline;
+  
+  margin: 0px;
+  padding: 0px;
+  border: none;
+}
+
+/* ==== REFERENCE OBJECT AS A FIELD ==== */
+.instance_field > * > .instance_header > h1,
+.instance_field > * > .instance_list_header > h1 {
+  font-weight: normal;
+  text-decoration: none;
+  
+  margin: 0px;
+  padding: 0px;
+  border: none;
+}
+

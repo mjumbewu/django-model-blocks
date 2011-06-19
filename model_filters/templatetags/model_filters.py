@@ -13,7 +13,7 @@ def as_detail_html(instance, title=None):
       ``fields`` - A list of (name, label, value) tuples representing the 
                    instance's fields
     """
-    template = get_template('object_detail.html')
+    template = get_template('model_filters/object_detail.html')
     
     fields = []
     for field in instance._meta.fields:
@@ -51,7 +51,7 @@ def as_list_html(queryset, list_title=None):
     block.  Inserts into the context:
         ``instance_list`` - The list of instances
     """
-    template = get_template('object_list.html')
+    template = get_template('model_filters/object_list.html')
     
     if hasattr(queryset, 'model') and queryset.model:
         model = queryset.model._meta.module_name

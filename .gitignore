@@ -1,0 +1,13 @@
+# Compiled python
+*.py[c|o]
+
+# Gedit backup files
+*~
+
+# Test coverage generated files
+.coverage
+
+# Setup generated files
+build/
+dist/
+*.egg-info/

@@ -1,5 +1,6 @@
 {% load model_filters %}
 
+{% spaceless %}
 <section class="instance_detail_wrapper {{ model }}_detail_wrapper {{ model }}_{{ instance.pk }}_detail_wrapper">
   <header class="instance_header {{ model }}_header">
     <h1>{{ title|default_if_none:instance }}</h1>
@@ -10,7 +11,7 @@
       <div class="instance_field {{ model }}_{{ name }}">
         {% if not is_list and value != None %}
           <span class="instance_field_label {{ model }}_{{ name }}_label">{{ label|capfirst }}</span>
-          <span class="instance_field_value {{ model }}_{{ name }}_value">{% spaceless %}
+          <span class="instance_field_value {{ model }}_{{ name }}_value">
           
             {% if value.get_absolute_url %}
               <a href="{{ value.get_absolute_url }}">{{ value }}</a>
@@ -18,7 +19,7 @@
               {{ value }}
             {% endif %}
             
-          {% endspaceless %}</span>
+          </span>
         {% endif %}
         
         {% if is_list and value.all|length %}
@@ -28,3 +29,4 @@
     {% endfor %}
   </div>
 </section>
+{% endspaceless %}

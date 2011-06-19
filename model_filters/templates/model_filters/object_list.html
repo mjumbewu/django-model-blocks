@@ -1,5 +1,6 @@
 {% load model_filters %}
 
+{% spaceless %}
 <section class="instance_list_wrapper {{ model }}_list_wrapper">
   <header class="instance_list_header {{ model }}_list_header">
     <h1>{{ title|default_if_none:model|capfirst }}{% if not title %} List{% endif %}</h1>
@@ -7,7 +8,7 @@
 
   <ul class="instance_list {{ model }}_list">
     {% for instance in instance_list %}
-      <li class="instance_list_item {{ model }}_list_item {{ model }}_{{ instance.pk }}_list_item">{% spaceless %}
+      <li class="instance_list_item {{ model }}_list_item {{ model }}_{{ instance.pk }}_list_item">
         
         {% if instance.get_absolute_url %}
           <a href="{{ instance.get_absolute_url }}">{{ instance }}</a>
@@ -15,8 +16,8 @@
           {{ instance|as_detail_html }}
         {% endif %}
         
-        {% endspaceless %}</li>
+      </li>
     {% endfor %}
   </ul>
 </section>
-
+{% endspaceless %}

@@ -37,7 +37,7 @@ class DetailHtmlFilterTest (TestCase):
         )
         detail = model_filters.as_detail_html(pepulator)
         
-        model_filters.get_template.assert_called_with('object_detail.html')
+        model_filters.get_template.assert_called_with('model_filters/object_detail.html')
         self.assertEqual(detail, expected_detail)
     
     
@@ -60,7 +60,7 @@ class DetailHtmlFilterTest (TestCase):
         )
         detail = template.render(context)
         
-        model_filters.get_template.assert_called_with('object_detail.html')
+        model_filters.get_template.assert_called_with('model_filters/object_detail.html')
         self.assertEqual(detail, expected_detail)
     
     
@@ -83,7 +83,7 @@ class DetailHtmlFilterTest (TestCase):
         )
         detail = template.render(context)
         
-        model_filters.get_template.assert_called_with('object_detail.html')
+        model_filters.get_template.assert_called_with('model_filters/object_detail.html')
         self.assertEqual(detail, expected_detail)
 
 
@@ -98,7 +98,7 @@ class DetailHtmlFilterTest (TestCase):
         )
         detail = model_filters.as_detail_html(pepulator)
         
-        model_filters.get_template.assert_called_with('object_detail.html')
+        model_filters.get_template.assert_called_with('model_filters/object_detail.html')
         self.assertEqual(detail, expected_detail)
     
     
@@ -120,7 +120,7 @@ class ListHtmlFilterTest (TestCase):
                                "<Pepulator: Pepulator #2346>]")
         rendering = model_filters.as_list_html(pepulator_list)
         
-        model_filters.get_template.assert_called_with('object_list.html')
+        model_filters.get_template.assert_called_with('model_filters/object_list.html')
         self.assertEqual(rendering, expected_rendering)
     
     
@@ -136,7 +136,7 @@ class ListHtmlFilterTest (TestCase):
                                "<Pepulator: Pepulator #2346>]")
         rendering = template.render(context)
         
-        model_filters.get_template.assert_called_with('object_list.html')
+        model_filters.get_template.assert_called_with('model_filters/object_list.html')
         self.assertEqual(rendering, expected_rendering)
 
     
@@ -154,7 +154,7 @@ class ListHtmlFilterTest (TestCase):
                                "<Pepulator: Pepulator #2346>]")
         rendering = template.render(context)
         
-        model_filters.get_template.assert_called_with('object_list.html')
+        model_filters.get_template.assert_called_with('model_filters/object_list.html')
         self.assertEqual(rendering, expected_rendering)
 
     
@@ -169,5 +169,5 @@ class ListHtmlFilterTest (TestCase):
                                "<Pepulator: Pepulator #2346>]")
         rendering = template.render(context)
         
-        model_filters.get_template.assert_called_with('object_list.html')
+        model_filters.get_template.assert_called_with('model_filters/object_list.html')
         self.assertEqual(rendering, expected_rendering)

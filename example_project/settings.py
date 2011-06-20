@@ -118,6 +118,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     
     'django_nose',
+    'south',
     
     'model_filters',
     

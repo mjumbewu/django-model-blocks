@@ -17,6 +17,23 @@ class Pepulator (models.Model):
     def get_absolute_url(self):
         return ('pepulator_detail_view', [str(self.serial_number)])
 
+
+class Knuckle (models.Model):
+    hardness = models.FloatField()
+    pepulator = models.ForeignKey('Pepulator', related_name='knuckles')
+    
+    def __unicode__(self):
+        return u'Knuckle of hardness %.2f' % self.hardness
+
+
+class Jamb (models.Model):
+    power = models.FloatField()
+    pepulator = models.ForeignKey('Pepulator', related_name='jambs')
+    
+    def __unicode__(self):
+        return u'Jamb with power %.2f' % self.power
+
+
 class Distributor (models.Model):
     name = models.CharField(max_length=256, primary_key=True)
     capacity = models.IntegerField()

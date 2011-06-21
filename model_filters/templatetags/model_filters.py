@@ -14,7 +14,7 @@ def as_detail_html(instance, title=None):
       ``fields`` - A list of (name, label, value) tuples representing the 
                    instance's fields
     """
-    node = ModelDetailNode(instance, 'asdkjagdsa')
+    node = ModelDetailNode(instance)
     return node.render(Context({'title':title}))
 
 
@@ -25,6 +25,6 @@ def as_list_html(queryset, list_title=None):
     block.  Inserts into the context:
         ``instance_list`` - The list of instances
     """
-    node = ModelListNode(queryset, 'asldkfd')
+    node = ModelListNode(queryset)
     return node.render(Context({'title':list_title}))
     

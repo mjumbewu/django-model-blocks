@@ -1,11 +1,11 @@
 from django.db.models.manager import Manager
-from django.template import Context, Node
+from django.template import Context, Node, Variable
 from django.template.loader import get_template
 
 class ModelDetailNode (Node):
-    def __init__(self, model_inst, alternate_template_name):
+    def __init__(self, model_inst, resolved=True):
         self.instance = model_inst
-        self.template_name = alternate_template_name
+        self.resolved = resolved
         
     def get_context_data(self):
         fields = []
@@ -39,9 +39,14 @@ class ModelDetailNode (Node):
                 'fields':fields}
     
     def get_template_variable(self):
-        return ''
+        template_variable = '%s_%s_template' % \
+            (self.instance._meta.app_label, self.instance._meta.module_name)
+        return template_variable
     
     def render(self, context):
+        if not self.resolved:
+            self.instance = Variable(self.instance).resolve(context)
+        
         template_variable = self.get_template_variable()
         template_name = context.get(template_variable,
                                     'model_filters/object_detail.html')
@@ -52,9 +57,8 @@ class ModelDetailNode (Node):
 
 
 class ModelListNode (Node):
-    def __init__(self, model_list, alternate_template_name):
+    def __init__(self, model_list, resolved=True):
         self.queryset = model_list
-        self.template_name = alternate_template_name
         
     def get_context_data(self):
         if hasattr(self.queryset, 'model') and self.queryset.model:

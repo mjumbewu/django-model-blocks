@@ -46,9 +46,30 @@ class ModelDetailNode (Node):
         else:
             template = get_template('model_filters/object_detail.html')
         
-        context.update(
-            Context(self.get_context_data())
-        )
+        context.update(Context(self.get_context_data()))
+        return template.render(context)
+
+
+class ModelListNode (Node):
+    def __init__(self, model_list, alternate_template_name):
+        self.queryset = model_list
+        self.template_name = alternate_template_name
+        
+    def get_context_data(self):
+        if hasattr(self.queryset, 'model') and self.queryset.model:
+            model = self.queryset.model._meta.module_name
+        else:
+            model = None
+        
+        return {'model':model, 'instance_list':self.queryset}
+    
+    def render(self, context):
+        if self.template_name in context:
+            template = get_template(self.template_name)
+        else:
+            template = get_template('model_filters/object_list.html')
+        
+        context.update(Context(self.get_context_data()))
         return template.render(context)
 
 
@@ -72,13 +93,6 @@ def as_list_html(queryset, list_title=None):
     block.  Inserts into the context:
         ``instance_list`` - The list of instances
     """
-    template = get_template('model_filters/object_list.html')
-    
-    if hasattr(queryset, 'model') and queryset.model:
-        model = queryset.model._meta.module_name
-    else:
-        model = None
-    
-    context = Context({'model':model, 'instance_list':queryset, 'title':list_title})
-    return template.render(context)
+    node = ModelListNode(queryset, 'asldkfd')
+    return node.render(Context({'title':list_title}))
     

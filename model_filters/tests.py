@@ -187,14 +187,14 @@ class DetailHtmlTagTest (TestCase):
         # Mock Django's get_template so that it doesn't load a real file;
         # instead just return a template that allows us to verify the context
         model_nodes.get_template = Mock(
-            return_value=Template('{{ instance|safe }}:{{ model|safe }},{% for name, label, value, is_list in fields %}{{ name|safe }},{{ label|safe }},{% if not is_list %}{{ value|safe }}{% else %}[{% for item in value.all %}{{ item|safe }},{% endfor %}]{% endif %},{% endfor %}'))
+            return_value=Template('{{ title|default_if_none:instance|safe }}:{{ model|safe }},{% for name, label, value, is_list in fields %}{{ name|safe }},{{ label|safe }},{% if not is_list %}{{ value|safe }}{% else %}[{% for item in value.all %}{{ item|safe }},{% endfor %}]{% endif %},{% endfor %}'))
     
     
     def test_tag_is_registered(self):
         """Test that the filter can be used from within a template"""
         
         template = Template(('{% load model_tags %}'
-                             '{% with pepulator_factory_pepulator_template="pepulator_factory/pepulator_detail.html" %}'
+                             '{% with pepulator_factory_pepulator_detail_template="pepulator_factory/pepulator_detail.html" %}'
                              '{% detail_block pepulator %}'
                              '{% endwith %}'))
         
@@ -215,4 +215,32 @@ class DetailHtmlTagTest (TestCase):
         
         model_nodes.get_template.assert_called_with('pepulator_factory/pepulator_detail.html')
         self.assertEqual(detail, expected_detail)
+    
+    
+class ListHtmlTagTest (TestCase):
+    fixtures = ['pepulator_factory_data.json']
+
+    def setUp(self):
+        # Mock Django's get_template so that it doesn't load a real file;
+        # instead just return a template that allows us to verify the context
+        model_nodes.get_template = Mock(
+            return_value=Template('{{ title|default_if_none:model|capfirst }}{% if not title %}s{% endif %}:{{ instance_list|safe }}'))
+    
+    
+    def test_filter_is_registered(self):
+        """Test that the filter can be used from within a template"""
+        
+        template = Template(('{% load model_tags %}'
+                             '{% with pepulator_factory_pepulator_list_template="pepulator_factory/pepulator_list.html" %}'
+                             '{% list_block pepulators %}'
+                             '{% endwith %}'))
+        pepulator_list = Pepulator.objects.filter(serial_number__gt=2000)
+        context = Context({'pepulators':pepulator_list})
+        
+        expected_rendering = (u"Pepulators:[<Pepulator: Pepulator #2345>, "
+                               "<Pepulator: Pepulator #2346>]")
+        rendering = template.render(context)
+        
+        model_nodes.get_template.assert_called_with('pepulator_factory/pepulator_list.html')
+        self.assertEqual(rendering, expected_rendering)
 

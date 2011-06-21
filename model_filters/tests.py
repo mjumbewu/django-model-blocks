@@ -12,6 +12,7 @@ from django.template import Context, Template
 
 from example_project.pepulator_factory.models import Pepulator, Distributor
 from model_filters.templatetags import model_filters
+from model_filters.templatetags import model_nodes
 
 class DetailHtmlFilterTest (TestCase):
     fixtures = ['pepulator_factory_data.json']
@@ -19,8 +20,8 @@ class DetailHtmlFilterTest (TestCase):
     def setUp(self):
         # Mock Django's get_template so that it doesn't load a real file;
         # instead just return a template that allows us to verify the context
-        model_filters.get_template = Mock(
-            return_value=Template('{{ title|default_if_none:instance|safe }}:{{ model|safe }},{% for name, label, value, is_list in fields %}{{ name|safe }},{{ label|safe }},{% if not is_list %}{{ value|safe }}{% else %}[{% for item in value.all %}{{ item|safe }}{% endfor %}]{% endif %},{% endfor %}'))
+        model_nodes.get_template = Mock(
+            return_value=Template('{{ title|default_if_none:instance|safe }}:{{ model|safe }},{% for name, label, value, is_list in fields %}{{ name|safe }},{{ label|safe }},{% if not is_list %}{{ value|safe }}{% else %}[{% for item in value.all %}{{ item|safe }},{% endfor %}]{% endif %},{% endfor %}'))
     
     
     def test_model_format(self):
@@ -34,12 +35,12 @@ class DetailHtmlFilterTest (TestCase):
             "manufacture_date,manufacture date,2011-06-10 11:12:33,"
             "color,color,red,"
             "distributed_by,distributed by,Walmart,"
-            "knuckles,knuckles,[],"
+            "knuckles,knuckles,[Knuckle of hardness 2.35,Knuckle of hardness 1.10,],"
             "jambs,jambs,[],"
         )
         detail = model_filters.as_detail_html(pepulator)
         
-        model_filters.get_template.assert_called_with('model_filters/object_detail.html')
+        model_nodes.get_template.assert_called_with('model_filters/object_detail.html')
         self.assertEqual(detail, expected_detail)
     
     
@@ -59,12 +60,12 @@ class DetailHtmlFilterTest (TestCase):
             "manufacture_date,manufacture date,2011-06-10 11:12:33,"
             "color,color,red,"
             "distributed_by,distributed by,Walmart,"
-            "knuckles,knuckles,[],"
+            "knuckles,knuckles,[Knuckle of hardness 2.35,Knuckle of hardness 1.10,],"
             "jambs,jambs,[],"
         )
         detail = template.render(context)
         
-        model_filters.get_template.assert_called_with('model_filters/object_detail.html')
+        model_nodes.get_template.assert_called_with('model_filters/object_detail.html')
         self.assertEqual(detail, expected_detail)
     
     
@@ -84,12 +85,12 @@ class DetailHtmlFilterTest (TestCase):
             "manufacture_date,manufacture date,2011-06-10 11:12:33,"
             "color,color,red,"
             "distributed_by,distributed by,Walmart,"
-            "knuckles,knuckles,[],"
+            "knuckles,knuckles,[Knuckle of hardness 2.35,Knuckle of hardness 1.10,],"
             "jambs,jambs,[],"
         )
         detail = template.render(context)
         
-        model_filters.get_template.assert_called_with('model_filters/object_detail.html')
+        model_nodes.get_template.assert_called_with('model_filters/object_detail.html')
         self.assertEqual(detail, expected_detail)
 
 
@@ -100,11 +101,11 @@ class DetailHtmlFilterTest (TestCase):
         expected_detail = (u"Mom & Pop:distributor,"
             "name,name,Mom & Pop,"
             "capacity,capacity,175,"
-            "stock,stock,[Pepulator #1238],"
+            "stock,stock,[Pepulator #1238,],"
         )
         detail = model_filters.as_detail_html(pepulator)
         
-        model_filters.get_template.assert_called_with('model_filters/object_detail.html')
+        model_nodes.get_template.assert_called_with('model_filters/object_detail.html')
         self.assertEqual(detail, expected_detail)
     
     
@@ -114,7 +115,7 @@ class ListHtmlFilterTest (TestCase):
     def setUp(self):
         # Mock Django's get_template so that it doesn't load a real file;
         # instead just return a template that allows us to verify the context
-        model_filters.get_template = Mock(
+        model_nodes.get_template = Mock(
             return_value=Template('{{ title|default_if_none:model|capfirst }}{% if not title %}s{% endif %}:{{ instance_list|safe }}'))
     
     
@@ -126,7 +127,7 @@ class ListHtmlFilterTest (TestCase):
                                "<Pepulator: Pepulator #2346>]")
         rendering = model_filters.as_list_html(pepulator_list)
         
-        model_filters.get_template.assert_called_with('model_filters/object_list.html')
+        model_nodes.get_template.assert_called_with('model_filters/object_list.html')
         self.assertEqual(rendering, expected_rendering)
     
     
@@ -142,7 +143,7 @@ class ListHtmlFilterTest (TestCase):
                                "<Pepulator: Pepulator #2346>]")
         rendering = template.render(context)
         
-        model_filters.get_template.assert_called_with('model_filters/object_list.html')
+        model_nodes.get_template.assert_called_with('model_filters/object_list.html')
         self.assertEqual(rendering, expected_rendering)
 
     
@@ -160,7 +161,7 @@ class ListHtmlFilterTest (TestCase):
                                "<Pepulator: Pepulator #2346>]")
         rendering = template.render(context)
         
-        model_filters.get_template.assert_called_with('model_filters/object_list.html')
+        model_nodes.get_template.assert_called_with('model_filters/object_list.html')
         self.assertEqual(rendering, expected_rendering)
 
     
@@ -175,5 +176,43 @@ class ListHtmlFilterTest (TestCase):
                                "<Pepulator: Pepulator #2346>]")
         rendering = template.render(context)
         
-        model_filters.get_template.assert_called_with('model_filters/object_list.html')
+        model_nodes.get_template.assert_called_with('model_filters/object_list.html')
         self.assertEqual(rendering, expected_rendering)
+
+
+class DetailHtmlTagTest (TestCase):
+    fixtures = ['pepulator_factory_data.json']
+
+    def setUp(self):
+        # Mock Django's get_template so that it doesn't load a real file;
+        # instead just return a template that allows us to verify the context
+        model_nodes.get_template = Mock(
+            return_value=Template('{{ title|default_if_none:instance|safe }}:{{ model|safe }},{% for name, label, value, is_list in fields %}{{ name|safe }},{{ label|safe }},{% if not is_list %}{{ value|safe }}{% else %}[{% for item in value.all %}{{ item|safe }},{% endfor %}]{% endif %},{% endfor %}'))
+    
+    
+    def test_tag_is_registered(self):
+        """Test that the filter can be used from within a template"""
+        
+        template = Template(('{% load model_tags %}'
+                             '{% with pepulator_factory_pepulator_template="pepulator_factory/pepulator_detail.html" %}'
+                             '  {% detail_block pepulator %}'
+                             '{% endwith %}'))
+        
+        pepulator = Pepulator.objects.get(serial_number=1235)
+        context = Context({'pepulator':pepulator})
+        
+        expected_detail = (u"Pepulator #1235:pepulator,"
+            "serial_number,serial number,1235,"
+            "height,height,12,"
+            "width,width,15,"
+            "manufacture_date,manufacture date,2011-06-10 11:12:33,"
+            "color,color,red,"
+            "distributed_by,distributed by,Walmart,"
+            "knuckles,knuckles,[],"
+            "jambs,jambs,[],"
+        )
+        detail = template.render(context)
+        
+        model_nodes.get_template.assert_called_with('pepulator_factory/pepulator_detail.html')
+        self.assertEqual(detail, expected_detail)
+

@@ -1,77 +1,9 @@
-from django.db.models.manager import Manager
-from django.template import Context, Template, Library, Node
+from django.template import Context, Library
 from django.template.loader import get_template
 
+from model_nodes import ModelDetailNode, ModelListNode
+
 register = Library()
-
-class ModelDetailNode (Node):
-    def __init__(self, model_inst, alternate_template_name):
-        self.instance = model_inst
-        self.template_name = alternate_template_name
-        
-    def get_context_data(self):
-        fields = []
-        for field in self.instance._meta.fields:
-            name = field.name
-            label = field.verbose_name
-            value = getattr(self.instance, field.name)
-            is_list = False
-            is_direct = True
-            model = self.instance._meta.module_name
-            
-            if value is not None:
-                fields.append((
-                    name, label, value, is_list, is_direct, model,
-                ))
-        
-        for rel_obj, model in self.instance._meta.get_all_related_objects_with_model():
-            name = rel_obj.get_accessor_name()
-            label = name
-            value = getattr(self.instance, name)
-            is_list = isinstance(value, (list, tuple, Manager))
-            is_direct = False
-            
-            if value is not None:
-                fields.append((
-                    name, label, value, is_list, is_direct, model,
-                ))
-        
-        return {'model':self.instance._meta.module_name, 
-                'instance':self.instance, 
-                'fields':fields}
-    
-    def render(self, context):
-        if self.template_name in context:
-            template = get_template(self.template_name)
-        else:
-            template = get_template('model_filters/object_detail.html')
-        
-        context.update(Context(self.get_context_data()))
-        return template.render(context)
-
-
-class ModelListNode (Node):
-    def __init__(self, model_list, alternate_template_name):
-        self.queryset = model_list
-        self.template_name = alternate_template_name
-        
-    def get_context_data(self):
-        if hasattr(self.queryset, 'model') and self.queryset.model:
-            model = self.queryset.model._meta.module_name
-        else:
-            model = None
-        
-        return {'model':model, 'instance_list':self.queryset}
-    
-    def render(self, context):
-        if self.template_name in context:
-            template = get_template(self.template_name)
-        else:
-            template = get_template('model_filters/object_list.html')
-        
-        context.update(Context(self.get_context_data()))
-        return template.render(context)
-
 
 @register.filter
 def as_detail_html(instance, title=None):

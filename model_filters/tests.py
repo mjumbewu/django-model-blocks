@@ -34,6 +34,8 @@ class DetailHtmlFilterTest (TestCase):
             "manufacture_date,manufacture date,2011-06-10 11:12:33,"
             "color,color,red,"
             "distributed_by,distributed by,Walmart,"
+            "knuckles,knuckles,[],"
+            "jambs,jambs,[],"
         )
         detail = model_filters.as_detail_html(pepulator)
         
@@ -57,6 +59,8 @@ class DetailHtmlFilterTest (TestCase):
             "manufacture_date,manufacture date,2011-06-10 11:12:33,"
             "color,color,red,"
             "distributed_by,distributed by,Walmart,"
+            "knuckles,knuckles,[],"
+            "jambs,jambs,[],"
         )
         detail = template.render(context)
         
@@ -80,6 +84,8 @@ class DetailHtmlFilterTest (TestCase):
             "manufacture_date,manufacture date,2011-06-10 11:12:33,"
             "color,color,red,"
             "distributed_by,distributed by,Walmart,"
+            "knuckles,knuckles,[],"
+            "jambs,jambs,[],"
         )
         detail = template.render(context)
         

@@ -1,9 +1,9 @@
-{% load model_filters %}
+{% load model_tags %}
 
 {% spaceless %}
 <section class="instance_list_wrapper {{ model }}_list_wrapper">
   <header class="instance_list_header {{ model }}_list_header">
-    <h1>{{ title|default_if_none:model|capfirst }}{% if not title %} List{% endif %}</h1>
+    <h1>{{ title|default:model|capfirst }}{% if not title %} List{% endif %}</h1>
   </header>
 
   <ul class="instance_list {{ model }}_list">
@@ -13,7 +13,9 @@
         {% if instance.get_absolute_url %}
           <a href="{{ instance.get_absolute_url }}">{{ instance }}</a>
         {% else %}
-          {{ instance|as_detail_html }}
+          {% with title='' %}
+            {% detail_block instance %}
+          {% endwith %}
         {% endif %}
         
       </li>

@@ -1,9 +1,9 @@
-{% load model_filters %}
+{% load model_tags %}
 
 {% spaceless %}
 <section class="instance_detail_wrapper {{ model }}_detail_wrapper {{ model }}_{{ instance.pk }}_detail_wrapper">
   <header class="instance_header {{ model }}_header">
-    <h1>{{ title|default_if_none:instance }}</h1>
+    <h1>{{ title|default:instance }}</h1>
   </header>
 
   <div class="instance_detail {{ model }}_detail">
@@ -23,7 +23,9 @@
         {% endif %}
         
         {% if is_list and value.all|length %}
-          {{ value.all|as_list_html:label|capfirst }}
+          {% with title=label %}
+            {% list_block value.all %}
+          {% endwith %}
         {% endif %}
       </div>
     {% endfor %}

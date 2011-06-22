@@ -25,6 +25,12 @@ setup(name='django-model-blocks',
       install_requires = [
         'Django>=1.2.1',
       ],
+      obsoletes = [
+        'model_filters',
+      ],
+      provides = [
+        'model_blocks',
+      ],
       classifiers = ['Development Status :: 4 - Beta',
                      'Environment :: Web Environment',
                      'Framework :: Django',

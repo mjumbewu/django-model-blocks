@@ -39,12 +39,8 @@ Modify your ``INSTALLED_APPS`` setting to include::
     model_blocks,
     ...
 
-If you plan on overriding any of ``model_blocks``'s default templates, remember
-that ``app_directories.Loader`` searches apps in the order they are specified
-in ``INSTALLED_APPS``.
-
-Usage
-~~~~~
+Basic Usage
+~~~~~~~~~~~
 
 Near the top of any template you want to use model blocks, or in a base 
 template, include the following line::
@@ -64,6 +60,45 @@ representation of the object, and the title on a list will be the name of the
 model appended with `' List'`. To change the title, pass in a parameter::
 
     {{ object|as_detail_block:"My Special Object" }}
+
+Advanced Usage
+~~~~~~~~~~~~~~
+
+While using the filters remains the original and most simple way to render
+the blocks, if you want/need greater control over the specifics of how certain
+models render, you can use the tag notation::
+
+    {% detail_block object %}
+
+    {% list_block object_list %}
+
+You can still override the title by using ``with``::
+
+    {% with title="My Special Object" %}
+        {% detail_block object %}
+    {% endwith %}
+
+Yeah, if all you need to do is override the title, then stick with the filters.  
+However, When you drop a detail block into your template, it will automatically 
+render all of the referenced object's fields, including related model fields.  
+This potentially results in a tree of objects in your page.  The tag notation's 
+strength is revealed when you need to use a custom template for any model in 
+your tree.
+
+The ``example_project`` in the source includes a demonstration of this feature.
+In that example, There are ``Pepulator``s, and each one may have several 
+``Knuckle``s and several ``Jamb``s.  However, each ``Knuckle`` has a field 
+referring to the URL of an image.  On our ``Pepulator`` detail page, we want 
+all of our ``Kuckle``s and ``Jamb``s shown.  The default template is sufficient
+for ``Jamb``s, but we have to provide a custom template (based on the default)
+for each ``Knuckle``.  So, we render the ``Pepulator`` detail like so::
+
+    {% with pepulator_factory_knuckle_detail_template="pepulator_factory/knuckle_detail.html" %}
+        {% detail_block pepulator %}
+    {% endwith %}
+
+Voila!  For more information, check out the ``pepulator_detail.html`` [1] and 
+``knuckle_detail.html`` [2] files.
 
 Help Out
 --------
@@ -87,3 +122,7 @@ Even simple packages need tests::
     $ python tests.py --with-coverage --cover-package=model_block
 
 Run it before and after you make any changes.  Try to not let that number drop.
+
+
+.. [1] https://github.com/mjumbewu/django-model-blocks/blob/master/example_project/pepulator_factory/templates/pepulator_factory/pepulator_detail.html
+.. [2] https://github.com/mjumbewu/django-model-blocks/blob/master/example_project/pepulator_factory/templates/pepulator_factory/knuckle_detail.html

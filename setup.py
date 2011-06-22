@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-model_filters = __import__('model_filters')
+model_blocks = __import__('model_blocks')
 
 readme_file = 'README.rst'
 try:
@@ -10,15 +10,16 @@ except IOError, err:
         "``long_description`` (%s)\n" % readme_file)
     sys.exit(1)
 
-setup(name='django-model-filters',
-      version='0.8.0',
-      description='Simple filters for generic object template blocks',
+setup(name='django-model-blocks',
+      version='0.8.1',
+      description=('Simple filters and tags for generic Django '
+                   'model template partials'),
       long_description=long_description,
       zip_safe=False,
       author='Mjumbe Wawatu Ukweli',
       author_email='mjumbewu@kwawatu.com',
-      url='https://github.com/mjumbewu/django-model-filters/',
-      download_url='https://github.com/mjumbewu/django-model-filters/downloads',
+      url='https://github.com/mjumbewu/django-model-blocks/',
+      download_url='https://github.com/mjumbewu/django-model-blocks/downloads',
       packages = find_packages(exclude=['example_project', 'example_project.*']),
       include_package_data=True,
       install_requires = [

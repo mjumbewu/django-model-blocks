@@ -84,7 +84,7 @@ class ModelDetailNode (BaseModelBlockNode):
         instance = self.get_resolved_value(context)
         template_variable = self.get_template_variable(instance, 'detail')
         template_name = context.get(template_variable,
-                                    'model_filters/object_detail.html')
+                                    'model_blocks/object_detail.html')
         template = get_template(template_name)
         
         context.update(Context(self.get_context_data(instance)))
@@ -106,7 +106,7 @@ class ModelListNode (BaseModelBlockNode):
         queryset = self.get_resolved_value(context)
         template_variable = self.get_template_variable(queryset, 'list')
         template_name = context.get(template_variable,
-                                    'model_filters/object_list.html')
+                                    'model_blocks/object_list.html')
         template = get_template(template_name)
         
         context.update(Context(self.get_context_data(queryset)))

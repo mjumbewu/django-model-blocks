@@ -6,7 +6,7 @@ from model_nodes import ModelDetailNode, ModelListNode
 register = Library()
 
 @register.filter
-def as_detail_html(instance, title=None):
+def as_detail_block(instance, title=None):
     """
     Template filter that returns the given instance as a template-formatted
     block.  Inserts two objects into the context:
@@ -19,7 +19,7 @@ def as_detail_html(instance, title=None):
 
 
 @register.filter
-def as_list_html(queryset, list_title=None):
+def as_list_block(queryset, list_title=None):
     """
     Template filter that returns the given instance list as a template-formatted
     block.  Inserts into the context:

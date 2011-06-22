@@ -120,7 +120,7 @@ INSTALLED_APPS = (
     'django_nose',
     'south',
     
-    'model_filters',
+    'model_blocks',
     
     'pepulator_factory',
 )

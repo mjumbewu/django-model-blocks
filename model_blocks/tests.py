@@ -1,5 +1,5 @@
 """
-Test the model filters
+Test the model blocks
 """
 
 import datetime
@@ -11,10 +11,10 @@ from django.db.models import Model, IntegerField, DateTimeField, CharField
 from django.template import Context, Template, TemplateSyntaxError
 
 from example_project.pepulator_factory.models import Pepulator, Distributor
-from model_filters.templatetags import model_filters
-from model_filters.templatetags import model_nodes
+from model_blocks.templatetags import model_filters
+from model_blocks.templatetags import model_nodes
 
-class DetailHtmlFilterTest (TestCase):
+class DetailBlockFilterTest (TestCase):
     fixtures = ['pepulator_factory_data.json']
 
     def setUp(self):
@@ -38,9 +38,9 @@ class DetailHtmlFilterTest (TestCase):
             "knuckles,knuckles,[Knuckle of hardness 2.35,Knuckle of hardness 1.10,],"
             "jambs,jambs,[],"
         )
-        detail = model_filters.as_detail_html(pepulator)
+        detail = model_filters.as_detail_block(pepulator)
         
-        model_nodes.get_template.assert_called_with('model_filters/object_detail.html')
+        model_nodes.get_template.assert_called_with('model_blocks/object_detail.html')
         self.assertEqual(detail, expected_detail)
     
     
@@ -48,7 +48,7 @@ class DetailHtmlFilterTest (TestCase):
         """Test that the filter can be used from within a template"""
         
         template = Template(('{% load model_filters %}'
-                             '{{ pepulator|as_detail_html }}'))
+                             '{{ pepulator|as_detail_block }}'))
         
         pepulator = Pepulator.objects.get(serial_number=1235)
         context = Context({'pepulator':pepulator})
@@ -65,7 +65,7 @@ class DetailHtmlFilterTest (TestCase):
         )
         detail = template.render(context)
         
-        model_nodes.get_template.assert_called_with('model_filters/object_detail.html')
+        model_nodes.get_template.assert_called_with('model_blocks/object_detail.html')
         self.assertEqual(detail, expected_detail)
     
     
@@ -73,7 +73,7 @@ class DetailHtmlFilterTest (TestCase):
         """Test that a title is used if provided"""
         
         template = Template(('{% load model_filters %}'
-                             '{{ pepulator|as_detail_html:"My Pepulator" }}'))
+                             '{{ pepulator|as_detail_block:"My Pepulator" }}'))
         
         pepulator = Pepulator.objects.get(serial_number=1235)
         context = Context({'pepulator':pepulator})
@@ -90,7 +90,7 @@ class DetailHtmlFilterTest (TestCase):
         )
         detail = template.render(context)
         
-        model_nodes.get_template.assert_called_with('model_filters/object_detail.html')
+        model_nodes.get_template.assert_called_with('model_blocks/object_detail.html')
         self.assertEqual(detail, expected_detail)
 
 
@@ -103,13 +103,13 @@ class DetailHtmlFilterTest (TestCase):
             "capacity,capacity,175,"
             "stock,stock,[Pepulator #1238,],"
         )
-        detail = model_filters.as_detail_html(pepulator)
+        detail = model_filters.as_detail_block(pepulator)
         
-        model_nodes.get_template.assert_called_with('model_filters/object_detail.html')
+        model_nodes.get_template.assert_called_with('model_blocks/object_detail.html')
         self.assertEqual(detail, expected_detail)
     
     
-class ListHtmlFilterTest (TestCase):
+class ListBlockFilterTest (TestCase):
     fixtures = ['pepulator_factory_data.json']
 
     def setUp(self):
@@ -125,9 +125,9 @@ class ListHtmlFilterTest (TestCase):
         
         expected_rendering = (u"Pepulators:[<Pepulator: Pepulator #2345>, "
                                "<Pepulator: Pepulator #2346>]")
-        rendering = model_filters.as_list_html(pepulator_list)
+        rendering = model_filters.as_list_block(pepulator_list)
         
-        model_nodes.get_template.assert_called_with('model_filters/object_list.html')
+        model_nodes.get_template.assert_called_with('model_blocks/object_list.html')
         self.assertEqual(rendering, expected_rendering)
     
     
@@ -135,7 +135,7 @@ class ListHtmlFilterTest (TestCase):
         """Test that the filter can be used from within a template"""
         
         template = Template(('{% load model_filters %}'
-                             '{{ pepulators|as_list_html }}'))
+                             '{{ pepulators|as_list_block }}'))
         pepulator_list = Pepulator.objects.filter(serial_number__gt=2000)
         context = Context({'pepulators':pepulator_list})
         
@@ -143,7 +143,7 @@ class ListHtmlFilterTest (TestCase):
                                "<Pepulator: Pepulator #2346>]")
         rendering = template.render(context)
         
-        model_nodes.get_template.assert_called_with('model_filters/object_list.html')
+        model_nodes.get_template.assert_called_with('model_blocks/object_list.html')
         self.assertEqual(rendering, expected_rendering)
 
     
@@ -153,7 +153,7 @@ class ListHtmlFilterTest (TestCase):
         # have a list of objects, then we don't know the model.
         
         template = Template(('{% load model_filters %}'
-                             '{{ pepulators|as_list_html }}'))
+                             '{{ pepulators|as_list_block }}'))
         pepulator_list = [p for p in Pepulator.objects.filter(serial_number__gt=2000)]
         context = Context({'pepulators':pepulator_list})
         
@@ -161,14 +161,14 @@ class ListHtmlFilterTest (TestCase):
                                "<Pepulator: Pepulator #2346>]")
         rendering = template.render(context)
         
-        model_nodes.get_template.assert_called_with('model_filters/object_list.html')
+        model_nodes.get_template.assert_called_with('model_blocks/object_list.html')
         self.assertEqual(rendering, expected_rendering)
 
     
     def test_alternate_title_is_used(self):
         """Test that a list title is used if provided"""
         template = Template(('{% load model_filters %}'
-                             '{{ pepulators|as_list_html:"Some Pepulators" }}'))
+                             '{{ pepulators|as_list_block:"Some Pepulators" }}'))
         pepulator_list = Pepulator.objects.filter(serial_number__gt=2000)
         context = Context({'pepulators':pepulator_list})
         
@@ -176,11 +176,11 @@ class ListHtmlFilterTest (TestCase):
                                "<Pepulator: Pepulator #2346>]")
         rendering = template.render(context)
         
-        model_nodes.get_template.assert_called_with('model_filters/object_list.html')
+        model_nodes.get_template.assert_called_with('model_blocks/object_list.html')
         self.assertEqual(rendering, expected_rendering)
 
 
-class DetailHtmlTagTest (TestCase):
+class DetailBlockTagTest (TestCase):
     fixtures = ['pepulator_factory_data.json']
 
     def setUp(self):
@@ -225,7 +225,7 @@ class DetailHtmlTagTest (TestCase):
                            '{% detail_block %}'))
     
     
-class ListHtmlTagTest (TestCase):
+class ListBlockTagTest (TestCase):
     fixtures = ['pepulator_factory_data.json']
 
     def setUp(self):
@@ -265,8 +265,8 @@ class ModelBlockModuleTest (TestCase):
         template = Template(('{% load model_blocks %}'
                              '{% detail_block pepulator %}'
                              '{% list_block pepulators %}'
-                             '{{ pepulator|as_detail_html }}'
-                             '{{ pepulators|as_list_html }}'))
+                             '{{ pepulator|as_detail_block }}'
+                             '{{ pepulators|as_list_block }}'))
                              
         # We just care that everything loaded, and we were able to get here
         # without incidence.

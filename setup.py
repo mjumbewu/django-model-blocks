@@ -11,7 +11,7 @@ except IOError, err:
     sys.exit(1)
 
 setup(name='django-model-filters',
-      version=0.5.2,
+      version='0.8.0',
       description='Simple filters for generic object template blocks',
       long_description=long_description,
       zip_safe=False,
@@ -23,9 +23,8 @@ setup(name='django-model-filters',
       include_package_data=True,
       install_requires = [
         'Django>=1.2.1',
-        'mock',
       ],
-      classifiers = ['Development Status :: 3 - Alpha',
+      classifiers = ['Development Status :: 4 - Beta',
                      'Environment :: Web Environment',
                      'Framework :: Django',
                      'Intended Audience :: Developers',

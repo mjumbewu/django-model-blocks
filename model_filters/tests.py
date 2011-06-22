@@ -260,3 +260,15 @@ class ListHtmlTagTest (TestCase):
                           ('{% load model_tags %}'
                            '{% list_block %}'))
 
+class ModelBlockModuleTest (TestCase):
+    def test_all_tags_and_filters_loaded(self):
+        template = Template(('{% load model_blocks %}'
+                             '{% detail_block pepulator %}'
+                             '{% list_block pepulators %}'
+                             '{{ pepulator|as_detail_html }}'
+                             '{{ pepulators|as_list_html }}'))
+                             
+        # We just care that everything loaded, and we were able to get here
+        # without incidence.
+        self.assert_(True)
+

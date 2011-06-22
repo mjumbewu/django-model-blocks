@@ -8,6 +8,35 @@
 
   <div class="instance_detail {{ model }}_detail">
     {% for name, label, value, is_list in fields %}
+      
+      {% comment %}
+       #
+       # This default template will render each field that belongs to the 
+       # instance, including the default ID primary key.  If this is not what
+       # you want, it is easiest to deal with it in your style sheet.  Creating
+       # a custom detail template just because you want to get rid of one field
+       # seems like it has a high code to benefit ratio.  The one exception to
+       # this is if your extra fields pose some sort of security vulnerability.
+       # Otherwise, the set of classes on the generated elements are flexible
+       # enough to handle most cases.
+       #
+       # If you DO want override this template for a given model (say, if you
+       # want to add more interactivity, or fundamentally change the way a 
+       # field is rendered), you can do so with:
+       #
+       #  {% load model_tags %}
+       #  ...
+       #  {% with (appname)_(modelname)_detail_template="override_file.html" %}
+       #    {% detail_block (your_instance) %}
+       #  {% endwith %}
+       #
+       # See the example_project included with the package source for an
+       # example of how this can work:
+       #
+       # https://github.com/mjumbewu/django-model-filters/blob/master/example_project/pepulator_factory/templates/pepulator_detail.html
+       #
+      {% endcomment %}
+      
       <div class="instance_field {{ model }}_{{ name }}">
         {% if not is_list and value != None %}
           <span class="instance_field_label {{ model }}_{{ name }}_label">{{ label|capfirst }}</span>

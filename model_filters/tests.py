@@ -8,7 +8,7 @@ from django.test import TestCase
 from mock import Mock
 
 from django.db.models import Model, IntegerField, DateTimeField, CharField
-from django.template import Context, Template
+from django.template import Context, Template, TemplateSyntaxError
 
 from example_project.pepulator_factory.models import Pepulator, Distributor
 from model_filters.templatetags import model_filters
@@ -216,6 +216,14 @@ class DetailHtmlTagTest (TestCase):
         model_nodes.get_template.assert_called_with('pepulator_factory/pepulator_detail.html')
         self.assertEqual(detail, expected_detail)
     
+    def test_fail_on_wrong_number_of_arguments(self):
+        self.assertRaises(TemplateSyntaxError, Template, 
+                          ('{% load model_tags %}'
+                           '{% detail_block pepulator "overflow" %}'))
+        self.assertRaises(TemplateSyntaxError, Template, 
+                          ('{% load model_tags %}'
+                           '{% detail_block %}'))
+    
     
 class ListHtmlTagTest (TestCase):
     fixtures = ['pepulator_factory_data.json']
@@ -243,4 +251,12 @@ class ListHtmlTagTest (TestCase):
         
         model_nodes.get_template.assert_called_with('pepulator_factory/pepulator_list.html')
         self.assertEqual(rendering, expected_rendering)
+    
+    def test_fail_on_wrong_number_of_arguments(self):
+        self.assertRaises(TemplateSyntaxError, Template, 
+                          ('{% load model_tags %}'
+                           '{% list_block pepulators "overflow" %}'))
+        self.assertRaises(TemplateSyntaxError, Template, 
+                          ('{% load model_tags %}'
+                           '{% list_block %}'))
 

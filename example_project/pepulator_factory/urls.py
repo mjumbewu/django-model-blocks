@@ -6,28 +6,28 @@ import pepulator_factory.models
 
 urlpatterns = patterns('pepulator_factory',
     url(r'^$', TemplateView.as_view(
-        template_name='content_list.html'),
+        template_name='pepulator_factory/content_list.html'),
         name='content_list_view'),
         
     url(r'^pepulators/$', ListView.as_view(
         model=pepulator_factory.models.Pepulator,
-        template_name='pepulator_list.html',
+        template_name='pepulator_factory/pepulator_list.html',
         context_object_name='pepulators'),
         name='pepulator_list_view'),
     url(r'^pepulators/(?P<pk>\d+)/$', DetailView.as_view(
         model=pepulator_factory.models.Pepulator,
-        template_name='pepulator_detail.html',
+        template_name='pepulator_factory/pepulator_detail.html',
         context_object_name='pepulator'),
         name='pepulator_detail_view'),
         
     url(r'^distributors/$', ListView.as_view(
         model=pepulator_factory.models.Distributor,
-        template_name='distributor_list.html',
+        template_name='pepulator_factory/distributor_list.html',
         context_object_name='distributors'),
         name='distributor_list_view'),
     url(r'^distributors/(?P<pk>.+)/$', DetailView.as_view(
         model=pepulator_factory.models.Distributor,
-        template_name='distributor_detail.html',
+        template_name='pepulator_factory/distributor_detail.html',
         context_object_name='distributor'),
         name='distributor_detail_view'),
 )

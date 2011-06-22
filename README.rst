@@ -97,8 +97,11 @@ for each ``Knuckle``.  So, we render the ``Pepulator`` detail like so::
         {% detail_block pepulator %}
     {% endwith %}
 
-Voila!  For more information, check out the ``pepulator_detail.html`` [1]_ and 
-``knuckle_detail.html`` [2]_ files.
+Voila!  For more information, check out the 
+`pepulator_detail.html <https://github.com/mjumbewu/django-model-blocks/blob/master/example_project/pepulator_factory/templates/pepulator_factory/pepulator_detail.html>`_ 
+and 
+`knuckle_detail.html <https://github.com/mjumbewu/django-model-blocks/blob/master/example_project/pepulator_factory/templates/pepulator_factory/knuckle_detail.html>`_ 
+files.
 
 Help Out
 --------
@@ -122,7 +125,3 @@ Even simple packages need tests::
     $ python tests.py --with-coverage --cover-package=model_block
 
 Run it before and after you make any changes.  Try to not let that number drop.
-
-
-.. [1] `pepulator_detail.html <https://github.com/mjumbewu/django-model-blocks/blob/master/example_project/pepulator_factory/templates/pepulator_factory/pepulator_detail.html>`_
-.. [2] `knuckle_detail.html <https://github.com/mjumbewu/django-model-blocks/blob/master/example_project/pepulator_factory/templates/pepulator_factory/knuckle_detail.html>`_

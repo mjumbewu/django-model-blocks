@@ -1,0 +1,52 @@
+{% load model_tags %}
+
+{% comment %}
+ #
+ # This file is based on the 'model_filters/object_detail.html' template.  When
+ # creating a custom detail block for a given model, that is probably the best
+ # place to start.
+ #
+{% endcomment %}
+
+{% spaceless %}
+<section class="instance_detail_wrapper {{ model }}_detail_wrapper {{ model }}_{{ instance.pk }}_detail_wrapper">
+  <header class="instance_header {{ model }}_header">
+    
+    {# Custom title #}
+    <h1>Stupendous {{ title|default:instance }}</h1>
+    
+  </header>
+
+  <div class="instance_detail {{ model }}_detail">
+    {% for name, label, value, is_list in fields %}
+      <div class="instance_field {{ model }}_{{ name }}">
+        {% if not is_list and value != None %}
+          <span class="instance_field_label {{ model }}_{{ name }}_label">{{ label|capfirst }}</span>
+          <span class="instance_field_value {{ model }}_{{ name }}_value">
+          
+            {% if value.get_absolute_url %}
+              <a href="{{ value.get_absolute_url }}">{{ value }}</a>
+            {% else %}
+            
+              {# Say we have images of knuckles #}
+              {% if name == "img_url" %}
+                <img src="{{ value }}" alt="Picture of {{ instance }}">
+                
+              {% else %}
+                {{ value }}
+              {% endif %}
+            {% endif %}
+            
+          </span>
+        {% endif %}
+        
+        {% if is_list and value.all|length %}
+          {% with title=label %}
+            {% list_block value.all %}
+          {% endwith %}
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endspaceless %}

@@ -20,6 +20,7 @@ class Pepulator (models.Model):
 
 class Knuckle (models.Model):
     hardness = models.FloatField()
+    img_url = models.URLField()
     pepulator = models.ForeignKey('Pepulator', related_name='knuckles')
     
     def __unicode__(self):

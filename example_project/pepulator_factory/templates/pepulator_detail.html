@@ -1,9 +1,22 @@
 {% extends "base.html" %}
-{% load model_filters %}
+{% load model_tags %}
 
 {% block title %}{{ pepulator }}{% endblock %}
 
 {% block content %}
-  {{ pepulator|as_detail_html }}
+  
+  {% comment %}
+   #
+   # This template is rendered a little differently than the default.  For a 
+   # plain template, see distributor_detail.html.  This one is special because
+   # it replaces the default template for a sub-component of the Pepulator
+   # model with a custom one.  That's how the images get on the page.  For more
+   # information, see the "pepulator_factory/knuckle_detail.html" template.
+   #
+  {% endcomment %}
+  
+  {% with pepulator_factory_knuckle_detail_template="pepulator_factory/knuckle_detail.html" %}
+    {% detail_block pepulator %}
+  {% endwith %}
 {% endblock %}
 

@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% load model_filters %}
+{% load model_tags %}
 
 {% block title %}Pepulators{% endblock %}
 
 {% block content %}
-  {{ pepulators|as_list_html }}
+  {% list_block pepulators %}
 {% endblock %}
 

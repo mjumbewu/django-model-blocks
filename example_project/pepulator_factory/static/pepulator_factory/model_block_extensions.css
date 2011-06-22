@@ -1,0 +1,25 @@
+.pepulator_detail > .pepulator_serial_number,
+.knuckle_detail > .knuckle_id,
+.knuckle_detail > .knuckle_hardness,
+.knuckle_detail > .knuckle_pepulator,
+.jamb_detail > .jamb_id,
+.jamb_detail > .jamb_power,
+.jamb_detail > .jamb_pepulator,
+.knuckle_img_url_label  {
+  display: none;
+}
+
+.knuckle_header {
+  margin-left: 1.5em;
+}
+
+.knuckle_header > h1,
+.jamb_header > h1 {
+  text-decoration: none !important;
+}
+
+.knuckle_img_url_value img {
+  float: left;
+  height: 1em;
+  margin-top: -1em;
+}

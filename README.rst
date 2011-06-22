@@ -97,8 +97,8 @@ for each ``Knuckle``.  So, we render the ``Pepulator`` detail like so::
         {% detail_block pepulator %}
     {% endwith %}
 
-Voila!  For more information, check out the ``pepulator_detail.html`` [1] and 
-``knuckle_detail.html`` [2] files.
+Voila!  For more information, check out the ``pepulator_detail.html``[1]_ and 
+``knuckle_detail.html``[2]_ files.
 
 Help Out
 --------

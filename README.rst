@@ -86,12 +86,13 @@ strength is revealed when you need to use a custom template for any model in
 your tree.
 
 The ``example_project`` in the source includes a demonstration of this feature.
-In that example, There are ``Pepulator``s, and each one may have several 
-``Knuckle``s and several ``Jamb``s.  However, each ``Knuckle`` has a field 
-referring to the URL of an image.  On our ``Pepulator`` detail page, we want 
-all of our ``Kuckle``s and ``Jamb``s shown.  The default template is sufficient
-for ``Jamb``s, but we have to provide a custom template (based on the default)
-for each ``Knuckle``.  So, we render the ``Pepulator`` detail like so::
+In that example, there are ``Pepulator`` objects, and each one may have several 
+``Knuckle`` objects and several ``Jamb`` objects.  However, each ``Knuckle`` has 
+a field referring to the URL of an image.  On our ``Pepulator`` detail page, we 
+want all of our ``Kuckle`` objects and ``Jamb`` objects shown.  The default 
+template is sufficient for ``Jamb`` objects, but we have to provide a custom 
+template (based on the default) for each ``Knuckle``.  So, we render the 
+``Pepulator`` detail like so::
 
     {% with pepulator_factory_knuckle_detail_template="pepulator_factory/knuckle_detail.html" %}
         {% detail_block pepulator %}

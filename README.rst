@@ -108,8 +108,11 @@ Help Out
 --------
 
 Found a bug? File an issue at `Github
-<https://github.com/mjumbewu/django-model-blocks>`. Have an improvement? Fork
-it and add it, or if you can’t code it, contact us to do it.
+<https://github.com/mjumbewu/django-model-blocks>`_. Have an improvement? Fork
+it and add it, or if you can’t code it, File an `issue
+<https://github.com/mjumbewu/django-model-blocks>`_ and we'll do it.
+
+Are you using or thinking of using ``django-model-filters``?  Please `drop a line <https://github.com/inbox/new/mjumbewu>`_ and let us know what for.  Knowing how people use it in the wild will help us make it better!
 
 Development
 ~~~~~~~~~~~

@@ -26,9 +26,11 @@ class BaseModelBlockNode (Node):
             template_variable = '%s_%s_%s_template' % \
                 (thing.model._meta.app_label, thing.model._meta.module_name, 
                  type_of_thing)
-        else:
+        elif hasattr(thing, '_meta') and thing:
             template_variable = '%s_%s_%s_template' % \
                 (thing._meta.app_label, thing._meta.module_name, type_of_thing)
+        else:
+            template_variable = ''
         return template_variable
     
     def get_resolved_value(self, context):

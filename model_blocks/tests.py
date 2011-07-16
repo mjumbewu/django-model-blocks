@@ -147,6 +147,21 @@ class ListBlockFilterTest (TestCase):
         self.assertEqual(rendering, expected_rendering)
 
     
+    def test_empty_queryset(self):
+        """Test that the filter can be used from within a template"""
+        
+        template = Template(('{% load model_filters %}'
+                             '{{ pepulators|as_list_block }}'))
+        pepulator_list = Pepulator.objects.filter(serial_number__gt=5000)
+        context = Context({'pepulators':pepulator_list})
+        
+        expected_rendering = (u"Pepulators:[]")
+        rendering = template.render(context)
+        
+        model_nodes.get_template.assert_called_with('model_blocks/object_list.html')
+        self.assertEqual(rendering, expected_rendering)
+
+    
     def test_non_query_set_results_in_no_model(self):
         """Test that when a non queryset is used, the model is None"""
         # Why? Because we try to read the model off of the queryset. If we just
@@ -159,6 +174,21 @@ class ListBlockFilterTest (TestCase):
         
         expected_rendering = (u"Nones:[<Pepulator: Pepulator #2345>, "
                                "<Pepulator: Pepulator #2346>]")
+        rendering = template.render(context)
+        
+        model_nodes.get_template.assert_called_with('model_blocks/object_list.html')
+        self.assertEqual(rendering, expected_rendering)
+
+    
+    def test_empty_list(self):
+        """Test that when a non queryset is used, the model is None"""
+        
+        template = Template(('{% load model_filters %}'
+                             '{{ pepulators|as_list_block }}'))
+        pepulator_list = []
+        context = Context({'pepulators':pepulator_list})
+        
+        expected_rendering = (u"Nones:[]")
         rendering = template.render(context)
         
         model_nodes.get_template.assert_called_with('model_blocks/object_list.html')

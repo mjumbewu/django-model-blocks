@@ -55,6 +55,9 @@ Or::
 
     {{ object_list|as_list_block }}
 
+(**NOTE:** If your list has many objects, consider using pagination, as the list 
+may require a long time to render.)
+
 By default, the title on an object detail block will be the unicode
 representation of the object, and the title on a list will be the name of the
 model appended with `' List'`. To change the title, pass in a parameter::
@@ -112,7 +115,9 @@ Found a bug? File an issue at `Github
 it and add it, or if you can’t code it, File an `issue
 <https://github.com/mjumbewu/django-model-blocks>`_ and we'll do it.
 
-Are you using or thinking of using ``django-model-filters``?  Please `drop a line <https://github.com/inbox/new/mjumbewu>`_ and let us know what for.  Knowing how people use it in the wild will help us make it better!
+Are you using or thinking of using ``django-model-filters``?  Please `drop a 
+line <https://github.com/inbox/new/mjumbewu>`_ and let us know what for.  
+Knowing how people use it in the wild will help us make it better!
 
 Development
 ~~~~~~~~~~~

@@ -31,7 +31,7 @@
           {% if instance.get_absolute_url %}
             <a href="{{ instance.get_absolute_url }}">{% teaser_block instance %}</a>
           {% else %}
-            {% teaser_block instance %}
+            {% detail_block instance %}
           {% endif %}
           
         {% endwith %}

@@ -45,9 +45,24 @@ class BaseModelBlockNode (Node):
         else:
             res_var = self.thing
         return res_var
+    
+    def render(self, context):
+        queryset = self.get_resolved_value(context)
+        template_variable = self.get_template_variable(queryset, self.thing_type)
+        template_name = context.get(template_variable,
+                                    'model_blocks/object_%s.html' % self.thing_type)
+        template = get_template(template_name)
+        
+        context.update(Context(self.get_context_data(queryset)))
+        if 'title' not in context:
+            context['title'] = None
+        return template.render(context)
 
 
 class ModelDetailNode (BaseModelBlockNode):
+    
+    thing_type = 'detail'
+    
     def get_context_data(self, instance):
         """
         Calculate additional context data that will be used to render the thing.
@@ -81,21 +96,12 @@ class ModelDetailNode (BaseModelBlockNode):
         return {'model':instance._meta.module_name, 
                 'instance':instance, 
                 'fields':fields}
-    
-    def render(self, context):
-        instance = self.get_resolved_value(context)
-        template_variable = self.get_template_variable(instance, 'detail')
-        template_name = context.get(template_variable,
-                                    'model_blocks/object_detail.html')
-        template = get_template(template_name)
-        
-        context.update(Context(self.get_context_data(instance)))
-        if 'title' not in context:
-            context['title'] = None
-        return template.render(context)
 
 
 class ModelListNode (BaseModelBlockNode):
+    
+    thing_type = 'list'
+    
     def get_context_data(self, queryset):
         if hasattr(queryset, 'model') and queryset.model:
             model = queryset.model._meta.module_name
@@ -104,17 +110,4 @@ class ModelListNode (BaseModelBlockNode):
         
         return {'model':model, 'instance_list':queryset}
     
-    def render(self, context):
-        queryset = self.get_resolved_value(context)
-        template_variable = self.get_template_variable(queryset, 'list')
-        template_name = context.get(template_variable,
-                                    'model_blocks/object_list.html')
-        template = get_template(template_name)
-        
-        context.update(Context(self.get_context_data(queryset)))
-        if 'title' not in context:
-            context['title'] = None
-        return template.render(context)
-
-
 

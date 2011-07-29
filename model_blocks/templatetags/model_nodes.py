@@ -98,6 +98,11 @@ class ModelDetailNode (BaseModelBlockNode):
                 'fields':fields}
 
 
+class ModelTeaserNode (ModelDetailNode):
+    
+    thing_type = 'teaser'
+
+
 class ModelListNode (BaseModelBlockNode):
     
     thing_type = 'list'

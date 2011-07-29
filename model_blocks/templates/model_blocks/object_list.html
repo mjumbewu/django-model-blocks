@@ -25,16 +25,16 @@
          #
         {% endcomment %}
         
-        {% if instance.get_absolute_url %}
-          <a href="{{ instance.get_absolute_url }}">{{ instance }}</a>
-        {% else %}
+        {# Reset the title, so that child blocks don't use it mistakenly #}
+        {% with title='' %}
         
-          {# Reset the title, so that child blocks don't use it mistakenly #}
-          {% with title='' %}
-            {% detail_block instance %}
-          {% endwith %}
+          {% if instance.get_absolute_url %}
+            <a href="{{ instance.get_absolute_url }}">{% teaser_block instance %}</a>
+          {% else %}
+            {% teaser_block instance %}
+          {% endif %}
           
-        {% endif %}
+        {% endwith %}
         
       </li>
     {% endfor %}

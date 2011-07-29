@@ -1,0 +1,7 @@
+{% load model_tags %}
+
+{% spaceless %}
+<section class="instance_teaser_wrapper {{ model }}_teaser_wrapper {{ model }}_{{ instance.pk }}_teaser_wrapper">
+  {{ instance }}
+</section>
+{% endspaceless %}

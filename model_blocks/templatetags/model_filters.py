@@ -1,7 +1,7 @@
 from django.template import Context, Library
 from django.template.loader import get_template
 
-from model_nodes import ModelDetailNode, ModelListNode
+from model_nodes import ModelDetailNode, ModelTeaserNode, ModelListNode
 
 register = Library()
 
@@ -15,6 +15,19 @@ def as_detail_block(instance, title=None):
                    instance's fields
     """
     node = ModelDetailNode(instance)
+    return node.render(Context({'title':title}))
+
+
+@register.filter
+def as_teaser_block(instance, title=None):
+    """
+    Template filter that returns the given instance as a template-formatted
+    teaser.  Inserts two objects into the context:
+      ``instance`` - The model instance
+      ``fields`` - A list of (name, label, value) tuples representing the 
+                   instance's fields
+    """
+    node = ModelTeaserNode(instance)
     return node.render(Context({'title':title}))
 
 

@@ -109,6 +109,36 @@ class DetailBlockFilterTest (TestCase):
         self.assertEqual(detail, expected_detail)
     
     
+class TeaserBlockFilterTest (TestCase):
+    fixtures = ['pepulator_factory_data.json']
+
+    def setUp(self):
+        # Mock Django's get_template so that it doesn't load a real file;
+        # instead just return a template that allows us to verify the context
+        model_nodes.get_template = Mock(
+            return_value=Template('{{ title|default_if_none:instance|safe }}:{{ model|safe }},{% for name, label, value, is_list in fields %}{{ name|safe }},{{ label|safe }},{% if not is_list %}{{ value|safe }}{% else %}[{% for item in value.all %}{{ item|safe }},{% endfor %}]{% endif %},{% endfor %}'))
+    
+    
+    def test_model_format(self):
+        """Tests that a given model is formatted as expected."""
+        pepulator = Pepulator.objects.get(serial_number=1235)
+        
+        expected_teaser = (u"Pepulator #1235:pepulator,"
+            "serial_number,serial number,1235,"
+            "height,height,12,"
+            "width,width,15,"
+            "manufacture_date,manufacture date,2011-06-10 11:12:33,"
+            "color,color,red,"
+            "distributed_by,distributed by,Walmart,"
+            "knuckles,knuckles,[Knuckle of hardness 2.35,Knuckle of hardness 1.10,],"
+            "jambs,jambs,[],"
+        )
+        teaser = model_filters.as_teaser_block(pepulator)
+        
+        model_nodes.get_template.assert_called_with('model_blocks/object_teaser.html')
+        self.assertEqual(teaser, expected_teaser)
+    
+    
 class ListBlockFilterTest (TestCase):
     fixtures = ['pepulator_factory_data.json']
 
@@ -253,6 +283,51 @@ class DetailBlockTagTest (TestCase):
         self.assertRaises(TemplateSyntaxError, Template, 
                           ('{% load model_tags %}'
                            '{% detail_block %}'))
+    
+    
+class TeaserBlockTagTest (TestCase):
+    fixtures = ['pepulator_factory_data.json']
+
+    def setUp(self):
+        # Mock Django's get_template so that it doesn't load a real file;
+        # instead just return a template that allows us to verify the context
+        model_nodes.get_template = Mock(
+            return_value=Template('{{ title|default_if_none:instance|safe }}:{{ model|safe }},{% for name, label, value, is_list in fields %}{{ name|safe }},{{ label|safe }},{% if not is_list %}{{ value|safe }}{% else %}[{% for item in value.all %}{{ item|safe }},{% endfor %}]{% endif %},{% endfor %}'))
+    
+    
+    def test_tag_is_registered(self):
+        """Test that the filter can be used from within a template"""
+        
+        template = Template(('{% load model_tags %}'
+                             '{% with pepulator_factory_pepulator_teaser_template="pepulator_factory/pepulator_teaser.html" %}'
+                             '{% teaser_block pepulator %}'
+                             '{% endwith %}'))
+        
+        pepulator = Pepulator.objects.get(serial_number=1235)
+        context = Context({'pepulator':pepulator})
+        
+        expected_teaser = (u"Pepulator #1235:pepulator,"
+            "serial_number,serial number,1235,"
+            "height,height,12,"
+            "width,width,15,"
+            "manufacture_date,manufacture date,2011-06-10 11:12:33,"
+            "color,color,red,"
+            "distributed_by,distributed by,Walmart,"
+            "knuckles,knuckles,[Knuckle of hardness 2.35,Knuckle of hardness 1.10,],"
+            "jambs,jambs,[],"
+        )
+        teaser = template.render(context)
+        
+        model_nodes.get_template.assert_called_with('pepulator_factory/pepulator_teaser.html')
+        self.assertEqual(teaser, expected_teaser)
+    
+    def test_fail_on_wrong_number_of_arguments(self):
+        self.assertRaises(TemplateSyntaxError, Template, 
+                          ('{% load model_tags %}'
+                           '{% teaser_block pepulator "overflow" %}'))
+        self.assertRaises(TemplateSyntaxError, Template, 
+                          ('{% load model_tags %}'
+                           '{% teaser_block %}'))
     
     
 class ListBlockTagTest (TestCase):

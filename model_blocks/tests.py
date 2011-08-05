@@ -276,6 +276,57 @@ class DetailBlockTagTest (TestCase):
         model_nodes.get_template.assert_called_with('pepulator_factory/pepulator_detail.html')
         self.assertEqual(detail, expected_detail)
     
+    
+    def test_with_specific_fields(self):
+        """Test that the included fields spec is respected"""
+        
+        template = Template(('{% load model_tags %}'
+                             '{% with pepulator_factory_pepulator_detail_template="pepulator_factory/pepulator_detail.html" %}'
+                             '{% with pepulator_factory_pepulator_fields="serial_number, color, height, width" %}'
+                             '{% detail_block pepulator %}'
+                             '{% endwith %}'
+                             '{% endwith %}'))
+        
+        pepulator = Pepulator.objects.get(serial_number=1235)
+        context = Context({'pepulator':pepulator})
+        
+        expected_detail = (u"Pepulator #1235:pepulator,"
+            "serial_number,serial number,1235,"
+            "color,color,red,"
+            "height,height,12,"
+            "width,width,15,"
+        )
+        detail = template.render(context)
+        
+        self.assertEqual(detail, expected_detail)
+    
+    
+    def test_with_excluded_fields(self):
+        """Test that the excluded fields spec is respected"""
+        
+        template = Template(('{% load model_tags %}'
+                             '{% with pepulator_factory_pepulator_detail_template="pepulator_factory/pepulator_detail.html" %}'
+                             '{% with pepulator_factory_pepulator_exclude="knuckles, jambs" %}'
+                             '{% detail_block pepulator %}'
+                             '{% endwith %}'
+                             '{% endwith %}'))
+        
+        pepulator = Pepulator.objects.get(serial_number=1235)
+        context = Context({'pepulator':pepulator})
+        
+        expected_detail = (u"Pepulator #1235:pepulator,"
+            "serial_number,serial number,1235,"
+            "height,height,12,"
+            "width,width,15,"
+            "manufacture_date,manufacture date,2011-06-10 11:12:33,"
+            "color,color,red,"
+            "distributed_by,distributed by,Walmart,"
+        )
+        detail = template.render(context)
+        
+        self.assertEqual(detail, expected_detail)
+    
+    
     def test_fail_on_wrong_number_of_arguments(self):
         self.assertRaises(TemplateSyntaxError, Template, 
                           ('{% load model_tags %}'

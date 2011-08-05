@@ -53,7 +53,7 @@ class BaseModelBlockNode (Node):
                                     'model_blocks/object_%s.html' % self.thing_type)
         template = get_template(template_name)
         
-        context.update(Context(self.get_context_data(queryset)))
+        context.update(Context(self.get_context_data(queryset, context)))
         if 'title' not in context:
             context['title'] = None
         return template.render(context)
@@ -63,13 +63,63 @@ class ModelDetailNode (BaseModelBlockNode):
     
     thing_type = 'detail'
     
-    def get_context_data(self, instance):
+    def get_include_fields_variable(self, instance):
+        """
+        Return the name of the template variable that should be used to 
+        determine which fields to show (and in what order)
+        """
+        include_fields_variable = '%s_%s_fields' % \
+            (instance._meta.app_label, instance._meta.module_name)
+        
+        return include_fields_variable
+    
+    def get_exclude_fields_variable(self, instance):
+        """
+        Return the name of the template variable that should be used to 
+        determine which fields to exclude from the display.
+        """
+        exclude_fields_variable = '%s_%s_exclude' % \
+            (instance._meta.app_label, instance._meta.module_name)
+        
+        return exclude_fields_variable
+    
+    def get_include_fields(self, instance, context):
+        var = self.get_include_fields_variable(instance)
+        fields_str = context.get(var, None)
+        
+        if fields_str is None:
+            return []
+        else:
+            include_fields = [field.strip() for field in fields_str.split(',')]
+            return include_fields
+    
+    def get_exclude_fields(self, instance, context):
+        var = self.get_exclude_fields_variable(instance)
+        fields_str = context.get(var, None)
+        
+        if fields_str is None:
+            return []
+        else:
+            exclude_fields = [field.strip() for field in fields_str.split(',')]
+            return exclude_fields
+    
+    def get_context_data(self, instance, context):
         """
         Calculate additional context data that will be used to render the thing.
         """
+        include_fields = self.get_include_fields(instance, context)
+        exclude_fields = self.get_exclude_fields(instance, context)
+        
         fields = []
         for field in instance._meta.fields:
             name = field.name
+            
+            if name in exclude_fields:
+                continue
+            
+            if include_fields and name not in include_fields:
+                continue
+            
             label = field.verbose_name
             value = getattr(instance, field.name)
             is_list = False
@@ -83,6 +133,13 @@ class ModelDetailNode (BaseModelBlockNode):
         
         for rel_obj, model in instance._meta.get_all_related_objects_with_model():
             name = rel_obj.get_accessor_name()
+            
+            if name in exclude_fields:
+                continue
+            
+            if include_fields and name not in include_fields:
+                continue
+            
             label = name
             value = getattr(instance, name)
             is_list = isinstance(value, (list, tuple, Manager))
@@ -92,6 +149,11 @@ class ModelDetailNode (BaseModelBlockNode):
                 fields.append((
                     name, label, value, is_list, is_direct, model,
                 ))
+        
+        # If include_fields was defined, then sort by the order.
+        if include_fields:
+            fields = sorted(fields, key=lambda field: include_fields.index(field[0]))
+                
         
         return {'model':instance._meta.module_name, 
                 'instance':instance, 
@@ -107,7 +169,7 @@ class ModelListNode (BaseModelBlockNode):
     
     thing_type = 'list'
     
-    def get_context_data(self, queryset):
+    def get_context_data(self, queryset, context):
         if hasattr(queryset, 'model') and queryset.model:
             model = queryset.model._meta.module_name
         else:

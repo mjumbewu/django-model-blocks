@@ -47,15 +47,29 @@ class BaseModelBlockNode (Node):
         return res_var
     
     def render(self, context):
-        queryset = self.get_resolved_value(context)
-        template_variable = self.get_template_variable(queryset, self.thing_type)
+        # Grab the thing to render.  It'll be a model instance, or a queryset,
+        # or a list or something.
+        thing = self.get_resolved_value(context)
+        
+        # Get the name of the context variable that holds the override template
+        # file name.
+        template_variable = self.get_template_variable(thing, self.thing_type)
+        
+        # If the override template file name is set, then use that.  Otherwise,
+        # use the default template for the thing type
         template_name = context.get(template_variable,
                                     'model_blocks/object_%s.html' % self.thing_type)
         template = get_template(template_name)
         
-        context.update(Context(self.get_context_data(queryset, context)))
+        # Get the data necessary for rendering the thing, and add it to the
+        # context.
+        context.update(Context(self.get_context_data(thing, context)))
+        
+        # The variable 'title' must be in the context.  If it's not there, add
+        # it and set it to None
         if 'title' not in context:
             context['title'] = None
+        
         return template.render(context)
 
 
@@ -63,49 +77,44 @@ class ModelDetailNode (BaseModelBlockNode):
     
     thing_type = 'detail'
     
-    def get_include_fields_variable(self, instance):
-        """
-        Return the name of the template variable that should be used to 
-        determine which fields to show (and in what order)
-        """
-        include_fields_variable = '%s_%s_fields' % \
-            (instance._meta.app_label, instance._meta.module_name)
+    def __get_fields_list_variable(self, instance, var_suffix):
+        # The variable name is built up from the name of the app, the name of 
+        # the model, and the specified suffix.
+        fields_list_variable = '%s_%s_%s' % \
+            (instance._meta.app_label, instance._meta.module_name, var_suffix)
         
-        return include_fields_variable
-    
-    def get_exclude_fields_variable(self, instance):
-        """
-        Return the name of the template variable that should be used to 
-        determine which fields to exclude from the display.
-        """
-        exclude_fields_variable = '%s_%s_exclude' % \
-            (instance._meta.app_label, instance._meta.module_name)
+        return fields_list_variable
         
-        return exclude_fields_variable
     
-    def get_include_fields(self, instance, context):
-        var = self.get_include_fields_variable(instance)
+    def __get_field_list(self, instance, context, var_suffix):
+        # Get the variable name to look for
+        var = self.__get_fields_list_variable(instance, var_suffix)
         fields_str = context.get(var, None)
         
+        # If the variable is not set, just return an empty list
         if fields_str is None:
             return []
+        
+        # If the variable is set, split the list on comma (,) and return
         else:
             include_fields = [field.strip() for field in fields_str.split(',')]
             return include_fields
+            
+    
+    def get_include_fields(self, instance, context):
+        """Return a list of fields and order to include in the rendering."""
+        return self.__get_field_list(instance, context, 'fields')
+        
     
     def get_exclude_fields(self, instance, context):
-        var = self.get_exclude_fields_variable(instance)
-        fields_str = context.get(var, None)
+        """Return a list of fields to exclude from the rendering."""
+        return self.__get_field_list(instance, context, 'exclude')
         
-        if fields_str is None:
-            return []
-        else:
-            exclude_fields = [field.strip() for field in fields_str.split(',')]
-            return exclude_fields
     
     def get_context_data(self, instance, context):
         """
         Calculate additional context data that will be used to render the thing.
+        
         """
         include_fields = self.get_include_fields(instance, context)
         exclude_fields = self.get_exclude_fields(instance, context)

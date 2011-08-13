@@ -70,7 +70,11 @@ class BaseModelBlockNode (Node):
         if 'title' not in context:
             context['title'] = None
         
-        return template.render(context)
+        # After rendering, pop off of the context so that it's back to normal 
+        # for the next tag.
+        rendering = template.render(context)
+        context.pop()
+        return rendering
 
 
 class ModelDetailNode (BaseModelBlockNode):

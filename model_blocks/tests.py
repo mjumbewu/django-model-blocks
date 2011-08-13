@@ -428,3 +428,30 @@ class ModelBlockModuleTest (TestCase):
         # without incidence.
         self.assert_(True)
 
+
+class SideEffectsTest (TestCase):
+    fixtures = ['pepulator_factory_data.json']
+
+    def setUp(self):
+        # Mock Django's get_template so that it doesn't load a real file;
+        # instead just return a template that allows us to verify the context
+        model_nodes.get_template = Mock(
+            return_value=Template('{{ title|default_if_none:model|capfirst }}{% if not title %}s{% endif %}'))
+    
+    
+    def test_model_doesnt_carry_over_into_future_blocks(self):
+        template = Template(('{% load model_tags %}'
+                             '{{ model }}'
+                             '{% list_block distributors %}'
+                             '{{ model }}'))
+        distributor_list = Distributor.objects.all()
+        context = Context({'model':'My String',
+                           'distributors':distributor_list})
+        
+        expected_rendering = (u"My String"
+                               "Distributors"
+                               "My String")
+        rendering = template.render(context)
+        
+        self.assertEqual(rendering, expected_rendering)
+

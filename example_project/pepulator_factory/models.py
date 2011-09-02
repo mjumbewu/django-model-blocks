@@ -6,6 +6,7 @@ class Pepulator (models.Model):
     width = models.IntegerField()
     manufacture_date = models.DateTimeField(auto_now=True)
     color = models.CharField(max_length=32)
+    address = models.URLField(null=True)
     
     distributed_by = models.ForeignKey('Distributor', null=True, 
                                        related_name='stock')

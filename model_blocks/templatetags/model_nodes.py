@@ -136,12 +136,12 @@ class ModelDetailNode (BaseModelBlockNode):
             label = field.verbose_name
             value = getattr(instance, field.name)
             is_list = False
-            is_direct = True
+            is_link = (type(field).__name__ in ('URLField',))
             model = instance._meta.module_name
             
             if value is not None:
                 fields.append((
-                    name, label, value, is_list, is_direct, model,
+                    name, label, value, is_list, is_link, model,
                 ))
         
         for rel_obj, model in instance._meta.get_all_related_objects_with_model():
@@ -156,11 +156,11 @@ class ModelDetailNode (BaseModelBlockNode):
             label = name
             value = getattr(instance, name)
             is_list = isinstance(value, (list, tuple, Manager))
-            is_direct = False
+            is_link = False
             
             if value is not None:
                 fields.append((
-                    name, label, value, is_list, is_direct, model,
+                    name, label, value, is_list, is_link, model,
                 ))
         
         # If include_fields was defined, then sort by the order.

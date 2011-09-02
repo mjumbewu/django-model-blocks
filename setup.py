@@ -11,7 +11,7 @@ except IOError, err:
     sys.exit(1)
 
 setup(name='django-model-blocks',
-      version='0.8.8',
+      version='0.8.9',
       description=('Simple filters and tags for generic Django '
                    'model template partials'),
       long_description=long_description,

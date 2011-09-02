@@ -1,0 +1,14 @@
+0.8.8
+=====
+
+Features:
+
+* Teasers more customizable by not forcing them to be wrapped in an anchor
+
+
+0.8.7
+=====
+
+Features:
+
+* More classes to select on in teaser, detail, and list templates

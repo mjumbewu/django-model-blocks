@@ -29,7 +29,7 @@
         {% with title='' %}
         
           {% if instance.get_absolute_url %}
-            <a href="{{ instance.get_absolute_url }}">{% teaser_block instance %}</a>
+            {% teaser_block instance %}
           {% else %}
             {% detail_block instance %}
           {% endif %}

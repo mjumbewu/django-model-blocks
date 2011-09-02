@@ -1,12 +1,12 @@
 {% load model_tags %}
 
 {% spaceless %}
-<section class="instance_detail_wrapper {{ model }}_detail_wrapper {{ model }}_{{ instance.pk }}_detail_wrapper">
+<section class="wrapper detail_wrapper instance_detail_wrapper {{ model }}_detail_wrapper {{ model }}_{{ instance.pk }}_detail_wrapper">
   <header class="instance_header {{ model }}_header">
     <h1>{{ title|default:instance }}</h1>
   </header>
 
-  <div class="instance_detail {{ model }}_detail">
+  <div class="detail instance_detail {{ model }}_detail">
     {% for name, label, value, is_list in fields %}
       
       {% comment %}
@@ -37,10 +37,10 @@
        #
       {% endcomment %}
       
-      <div class="instance_field {{ model }}_{{ name }}">
+      <div class="field instance_field {{ model }}_{{ name }}">
         {% if not is_list and value != None %}
-          <span class="instance_field_label {{ model }}_{{ name }}_label">{{ label|capfirst }}</span>
-          <span class="instance_field_value {{ model }}_{{ name }}_value">
+          <span class="field_label instance_field_label {{ model }}_{{ name }}_label">{{ label|capfirst }}</span>
+          <span class="field_value instance_field_value {{ model }}_{{ name }}_value">
           
             {% if value.get_absolute_url %}
               <a href="{{ value.get_absolute_url }}">{{ value }}</a>

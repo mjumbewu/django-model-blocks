@@ -306,7 +306,7 @@ class DetailBlockTagTest (TestCase):
         
         template = Template(('{% load model_tags %}'
                              '{% with pepulator_factory_pepulator_detail_template="pepulator_factory/pepulator_detail.html" %}'
-                             '{% with pepulator_factory_pepulator_exclude="knuckles, jambs" %}'
+                             '{% with pepulator_factory_pepulator_exclude="knuckles, jambs, color" %}'
                              '{% detail_block pepulator %}'
                              '{% endwith %}'
                              '{% endwith %}'))
@@ -319,7 +319,6 @@ class DetailBlockTagTest (TestCase):
             "height,height,12,"
             "width,width,15,"
             "manufacture_date,manufacture date,2011-06-10 11:12:33,"
-            "color,color,red,"
             "distributed_by,distributed by,Walmart,"
         )
         detail = template.render(context)

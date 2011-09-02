@@ -21,7 +21,20 @@ class DetailBlockFilterTest (TestCase):
         # Mock Django's get_template so that it doesn't load a real file;
         # instead just return a template that allows us to verify the context
         model_nodes.get_template = Mock(
-            return_value=Template('{{ title|default_if_none:instance|safe }}:{{ model|safe }},{% for name, label, value, is_list in fields %}{{ name|safe }},{{ label|safe }},{% if not is_list %}{{ value|safe }}{% else %}[{% for item in value.all %}{{ item|safe }},{% endfor %}]{% endif %},{% endfor %}'))
+            return_value=Template(('{{ title|default_if_none:instance|safe }}:{{ model|safe }},'
+                                   '{% for name, label, value, is_list, is_link in fields %}'
+                                     '{{ name|safe }},'
+                                     '{{ label|safe }},'
+                                     '{% if not is_list %}'
+                                       '{% if is_link %}'
+                                         '@{{ value }}'
+                                       '{% else %}'
+                                         '{{ value|safe }}'
+                                       '{% endif %}'
+                                     '{% else %}'
+                                       '[{% for item in value.all %}{{ item|safe }},{% endfor %}]'
+                                     '{% endif %},'
+                                   '{% endfor %}')))
     
     
     def test_model_format(self):
@@ -34,6 +47,7 @@ class DetailBlockFilterTest (TestCase):
             "width,width,15,"
             "manufacture_date,manufacture date,2011-06-10 11:12:33,"
             "color,color,red,"
+            "address,address,@ppr://1235/,"
             "distributed_by,distributed by,Walmart,"
             "knuckles,knuckles,[Knuckle of hardness 2.35,Knuckle of hardness 1.10,],"
             "jambs,jambs,[],"
@@ -59,6 +73,7 @@ class DetailBlockFilterTest (TestCase):
             "width,width,15,"
             "manufacture_date,manufacture date,2011-06-10 11:12:33,"
             "color,color,red,"
+            "address,address,@ppr://1235/,"
             "distributed_by,distributed by,Walmart,"
             "knuckles,knuckles,[Knuckle of hardness 2.35,Knuckle of hardness 1.10,],"
             "jambs,jambs,[],"
@@ -84,6 +99,7 @@ class DetailBlockFilterTest (TestCase):
             "width,width,15,"
             "manufacture_date,manufacture date,2011-06-10 11:12:33,"
             "color,color,red,"
+            "address,address,@ppr://1235/,"
             "distributed_by,distributed by,Walmart,"
             "knuckles,knuckles,[Knuckle of hardness 2.35,Knuckle of hardness 1.10,],"
             "jambs,jambs,[],"
@@ -129,6 +145,7 @@ class TeaserBlockFilterTest (TestCase):
             "width,width,15,"
             "manufacture_date,manufacture date,2011-06-10 11:12:33,"
             "color,color,red,"
+            "address,address,ppr://1235/,"
             "distributed_by,distributed by,Walmart,"
             "knuckles,knuckles,[Knuckle of hardness 2.35,Knuckle of hardness 1.10,],"
             "jambs,jambs,[],"
@@ -267,6 +284,7 @@ class DetailBlockTagTest (TestCase):
             "width,width,15,"
             "manufacture_date,manufacture date,2011-06-10 11:12:33,"
             "color,color,red,"
+            "address,address,ppr://1235/,"
             "distributed_by,distributed by,Walmart,"
             "knuckles,knuckles,[Knuckle of hardness 2.35,Knuckle of hardness 1.10,],"
             "jambs,jambs,[],"
@@ -306,7 +324,7 @@ class DetailBlockTagTest (TestCase):
         
         template = Template(('{% load model_tags %}'
                              '{% with pepulator_factory_pepulator_detail_template="pepulator_factory/pepulator_detail.html" %}'
-                             '{% with pepulator_factory_pepulator_exclude="knuckles, jambs, color" %}'
+                             '{% with pepulator_factory_pepulator_exclude="knuckles, jambs, color, address" %}'
                              '{% detail_block pepulator %}'
                              '{% endwith %}'
                              '{% endwith %}'))
@@ -362,6 +380,7 @@ class TeaserBlockTagTest (TestCase):
             "width,width,15,"
             "manufacture_date,manufacture date,2011-06-10 11:12:33,"
             "color,color,red,"
+            "address,address,ppr://1235/,"
             "distributed_by,distributed by,Walmart,"
             "knuckles,knuckles,[Knuckle of hardness 2.35,Knuckle of hardness 1.10,],"
             "jambs,jambs,[],"

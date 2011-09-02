@@ -7,7 +7,7 @@
   </header>
 
   <div class="detail instance_detail {{ model }}_detail">
-    {% for name, label, value, is_list in fields %}
+    {% for name, label, value, is_list, is_link in fields %}
       
       {% comment %}
        #
@@ -45,7 +45,11 @@
             {% if value.get_absolute_url %}
               <a href="{{ value.get_absolute_url }}">{{ value }}</a>
             {% else %}
-              {{ value }}
+              {% if is_link %}
+                <a href="{{ value }}">{{ value }}</a>
+              {% else %}
+                {{ value }}
+              {% endif %}
             {% endif %}
             
           </span>
